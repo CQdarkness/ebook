@@ -7,10 +7,10 @@ import java.util.List;
 public interface MallOrderDao {
     /**
      * 根据ID查订单
-     * @param id
+     * @param orderno
      * @return
      */
-    MallOrder findMallOrderById(Integer id);
+    MallOrder findMallOrderById(String orderno);
 
     /**
      * 根据用户ID查订单

@@ -10,8 +10,8 @@ import java.util.List;
 public class MallOrderServiceImpl implements MallOrderService {
     private MallOrderDao mallOrderDao=new MallOrderDaoImpl();
     @Override
-    public MallOrder findMallOrderById(Integer id) {
-        return mallOrderDao.findMallOrderById(id);
+    public MallOrder findMallOrderById(String orderno) {
+        return mallOrderDao.findMallOrderById(orderno);
     }
 
     @Override

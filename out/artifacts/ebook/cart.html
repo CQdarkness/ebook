@@ -69,10 +69,25 @@
 <script src="js/includeLogo.js"></script>
 <script type="text/javascript">
     $(function () {
-
+        let mallUser = JSON.parse(sessionStorage.getItem("mallUser"));
+        let userid = mallUser.id;
+        let goodsid = null;
+        let updateData = {
+            "userid": userid,
+            "goodsid": "",
+            "nums": "",
+            "selected": ""
+        }
+        if (mallUser && mallUser != null) {
+            userid = mallUser.id;
+        } else {
+            location.href = "login.html";
+            return;
+        }
         //购物车展示
         showCart();
-        function showCart(){
+
+        function showCart() {
             $.post("cart.do?method=display", function (message) {
                 let cartList = message.data;
                 let content = "";
@@ -82,7 +97,7 @@
                     totalMoeny += (cartList[i].goods.salesprice) * (cartList[i].nums);
                     content +=
                         "<tr>" +
-                        "<td> <input type = \"checkbox\" name = \"goodsid\" value = \"" + cartList[i].id + "\" > </td>" +
+                        "<td> <input type = \"checkbox\" name = \"goodsid\" value = \"" + cartList[i].goods.id + "\" > </td>" +
                         "<td><img src=\"" + cartList[i].goods.image + " \" width=\"66px\" height=\"66p\" alt=\"" + cartList[i].goods.name + "\" title=\"" + cartList[i].goods.name + "\"></td>" +
                         "<td class=\"t_l\"> <a href=\"goodsDetail.html?gid=" + cartList[i].goods.id + " \" class=\"blue\"></a>" + cartList[i].goods.name + "</td>" +
                         "<td>￥<b id=\"goodsPrice\">" + cartList[i].goods.salesprice + "</b></td>" +
@@ -90,7 +105,7 @@
                         "<input name=\"num\" class=\"tiny\" value=\"" + cartList[i].nums + "\" data-id=\"" + cartList[i].goods.id + "\" type=\"text\" id=\"goodsNums\">" +
                         "<a class=\"add\" href=\"javascript:void(0)\" data-id=\"" + cartList[i].goods.id + "\">+</a></div></td>" +
                         "<td>￥<b class=\"red2\" name='littleAmont' id=\"" + cartList[i].goods.id + "\">" + littleAmont + "</b></td>" +
-                        "<td><a href=\"javascript:void(0)\" value="+cartList[i].goods.id+" >删除</a></td>" +
+                        "<td><a href=\"javascript:void(0)\" value=" + cartList[i].goods.id + " >删除</a></td>" +
                         "</tr>";
                 }
                 content += "<tr class=\"stats\">" +
@@ -105,26 +120,26 @@
         }
 
         //全选全不选
-        $("#selAll").on("click",function (e){
-            if($(e.target).prop("checked")){
-                let allAmount=$("[name=littleAmont]");
-                let totalMoeny=0.00;
-                for(let i=0;i<allAmount.length;i++){
-                    totalMoeny+= parseFloat(allAmount[i].innerHTML);
+        $("#selAll").on("click", function (e) {
+            if ($(e.target).prop("checked")) {
+                let allAmount = $("[name=littleAmont]");
+                let totalMoeny = 0.00;
+                for (let i = 0; i < allAmount.length; i++) {
+                    totalMoeny += parseFloat(allAmount[i].innerHTML);
                 }
                 $("#totalmoney").text(totalMoeny.toFixed(2));
-            }else{
+            } else {
                 $("#totalmoney").text("0.00");
             }
         })
-        $("tbody").on("click","input",function (e){
-            let litteMount=parseFloat(e.target.parentElement.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.children[0].innerHTML);
-            let totalmoney=parseFloat($("#totalmoney").text());
-                if($(e.target).prop("checked")){
-                    $("#totalmoney").text((totalmoney+litteMount).toFixed(2));
-            }else{
-                    $("#totalmoney").text((totalmoney-litteMount).toFixed(2));
-                }
+        $("tbody").on("click", "input", function (e) {
+            let litteMount = parseFloat(e.target.parentElement.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.children[0].innerHTML);
+            let totalmoney = parseFloat($("#totalmoney").text());
+            if ($(e.target).prop("checked")) {
+                $("#totalmoney").text((totalmoney + litteMount).toFixed(2));
+            } else {
+                $("#totalmoney").text((totalmoney - litteMount).toFixed(2));
+            }
         })
         //tbody点击事件
         $("#bookList").click(function (e) {
@@ -141,29 +156,57 @@
             } else if ($(e.target).text() == "-") {
                 let nums = e.target.nextElementSibling.value;
                 let price = e.target.parentElement.parentElement.previousElementSibling.children[0].innerHTML;
-                if(nums>1){
+                if (nums > 1) {
                     nums--;
-                }else{
+                } else {
                     return;
                 }
                 e.target.nextElementSibling.value = nums;
                 e.target.parentElement.parentElement.nextElementSibling.children[0].innerHTML = (nums * price).toFixed(2);
                 let totalMoeny = parseFloat($("#totalmoney").text());
-                totalMoeny -=  price;
+                totalMoeny -= price;
                 totalMoeny = totalMoeny.toFixed(2);
                 $("#totalmoney").text(totalMoeny);
             } else if ($(e.target).text() == "删除") {
                 if (confirm("确认删除？")) {
-                    $.post("cart.do?method=delete&gid="+$(e.target).attr("value"),function (message){
-                        if(message.result=="true"){
+                    $.post("cart.do?method=delete&gid=" + $(e.target).attr("value"), function (message) {
+                        if (message.result == "true") {
                             showCart();
-                        }else{
-                          alert("网络波动，稍后再试！");
+                        } else {
+                            alert("网络波动，稍后再试！");
                         }
-                    },"json");
+                    }, "json");
                 }
             }
         });
+        //结算按钮
+        $(".btn_pay").on("click", function (e) {
+            e.preventDefault();
+            //获取所有选中的checkbox
+            let allInput = $("[name='goodsid']");
+            //更新购物车
+            for (let input of allInput) {
+                if (input.checked==true) {
+                    updateData.selected = "y";
+                    updateData.goodsid = input.value;
+                    updateData.nums = input.parentElement.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.children[0].children[1].value;
+                    updateCart(updateData);
+                }else{
+                    updateData.selected = "n";
+                    updateData.goodsid = input.value;
+                    updateData.nums = input.parentElement.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.children[0].children[1].value;
+                    updateCart(updateData);
+                }
+            }
+            //跳转页面
+            location.href="createOrder.html";
+        });
+
+        //更新购物车
+        function updateCart(updateData) {
+            $.post("cart.do?method=update", updateData, function (message) {
+            }, "json");
+        }
 
         function checkeALL() {
             if (!document.getElementById("selAll").checked == false) {

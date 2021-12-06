@@ -10,7 +10,7 @@
     <select id="findMallOrderById" resultType="MallOrder">
         SELECT *
         FROM mall_order
-        WHERE id = #{id}
+        WHERE orderno = #{orderno}
     </select>
     <select id="findMallOrderByUserId" resultType="MallOrder">
         SELECT *

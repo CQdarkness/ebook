@@ -10,10 +10,10 @@ import java.util.List;
 
 public class MallOrderDaoImpl implements MallOrderDao {
     @Override
-    public MallOrder findMallOrderById(Integer id) {
+    public MallOrder findMallOrderById(String orderno) {
         SqlSession sqlSession = MybatisUtil.getSqlSession();
         MallOrderMapper mapper = sqlSession.getMapper(MallOrderMapper.class);
-        MallOrder mallOrderById = mapper.findMallOrderById(id);
+        MallOrder mallOrderById = mapper.findMallOrderById(orderno);
         MybatisUtil.closeSqlSession();
         return mallOrderById;
     }

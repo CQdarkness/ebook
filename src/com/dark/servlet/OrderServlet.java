@@ -31,6 +31,7 @@ public class OrderServlet extends BaseServlet {
         String address = req.getParameter("address");
         String money = req.getParameter("money");
         String paytype = req.getParameter("paytype");
+        String orderno=req.getParameter("orderno");
         //非空判定
         if (address == null || "".equals(address) || accept == null || "".equals(accept) || telphone == null || "".equals(telphone)
                 || money == null || "".equals(money) || paytype == null || "".equals(paytype) || userid == null || "".equals(userid)) {
@@ -39,11 +40,7 @@ public class OrderServlet extends BaseServlet {
             JsonWriter.write(message, resp);
             return;
         }
-        //设置参数
-        //生成订单编号
-        String orderno="BKM"+
-        new SimpleDateFormat("yyyyMMddHHmmss").format(new Date())+
-                (new Random().nextInt(10000)+10000);
+
         //封装
         mallOrder.setAddress(address);
         mallOrder.setAccept(accept);
@@ -74,6 +71,13 @@ public class OrderServlet extends BaseServlet {
         String userid = req.getParameter("userid");
         List<MallOrder> mallOrderByUserId = mallOrderService.findMallOrderByUserId(Integer.parseInt(userid));
         message.setData(mallOrderByUserId);
+        JsonWriter.write(message,resp);
+    }
+    public void displayOrderById(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        Message message=new Message();
+        String orderno = req.getParameter("orderno");
+        MallOrder mallOrderById = mallOrderService.findMallOrderById(orderno);
+        message.setData(mallOrderById);
         JsonWriter.write(message,resp);
     }
 }

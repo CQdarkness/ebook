@@ -6,11 +6,11 @@ import java.util.List;
 
 public interface MallOrderMapper {
     /**
-     * 根据ID查订单
-     * @param id
+     * 根据orderno查订单
+     * @param orderno
      * @return
      */
-    MallOrder findMallOrderById(Integer id);
+    MallOrder findMallOrderById(String orderno);
 
     /**
      * 根据用户ID查订单
