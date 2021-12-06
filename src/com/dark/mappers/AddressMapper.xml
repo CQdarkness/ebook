@@ -8,6 +8,17 @@
         FROM mall_address
         WHERE userid = #{userid}
     </select>
+    <select id="findAddressById" resultType="Address">
+        SELECT *
+        FROM mall_address
+        WHERE id = #{id}
+    </select>
+    <select id="findAllProvince" resultType="MallRegion">
+        SELECT * FROM mall_region WHERE ISNULL(pid);
+    </select>
+    <select id="findAllRegionById" resultType="MallRegion">
+        SELECT * FROM mall_region WHERE pid=#{id}
+    </select>
     <insert id="insertAddress" parameterType="Address">
         INSERT INTO mall_address(userid, accept, telphone, province,city,area,address,type)
         VALUES (#{userid}, #{accept}, #{telphone},#{province},#{city},#{area},#{address},#{type})
@@ -25,16 +36,16 @@
                 telphone=#{telphone},
             </if>
             <if test="province!=null">
-                province=#{province}
+                province=#{province},
             </if>
             <if test="city!=null">
-                city=#{city}
+                city=#{city},
             </if>
             <if test="area!=null">
-                area=#{area}
+                area=#{area},
             </if>
             <if test="address!=null">
-                address=#{address}
+                address=#{address},
             </if>
             <if test="type!=null">
                 type=#{type}
@@ -42,4 +53,7 @@
         </set>
         WHERE id=#{id}
     </update>
+    <delete id="deleteAddress">
+        DELETE FROM mall_address WHERE id=#{id}
+    </delete>
 </mapper>

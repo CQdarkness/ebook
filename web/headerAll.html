@@ -49,24 +49,29 @@
 <script>
     $(function () {
         //获取User
-            let mallUser=JSON.parse(sessionStorage.getItem("mallUser"));
-            let loginContent=""
-            if(mallUser&&mallUser!=null){
-                loginContent="<li className=\"first\"><a href=\"personal.html\">个人中心</a></li>\n" +
-                    "        <li><a href=\"myOrders.html\">我的订单</a></li>"+
-                            "<li><a href=\"#\">用户名："+mallUser.account+"</a></li>";
-                let userid=mallUser.id;
-                $.post("cart.do?method=getCartByUserId&userid="+userid,function (message){
-                    let cartList=message.data;
-                    $("#mycart_nums").text(cartList.length);
-        },"json")
-
-            }else{
-                loginContent="<p className=\"loginfo\">[<a href=\"login.html\">登录</a> " +
-                    "<a className=\"reg\" href=\"register.html\">免费注册</a>]</p>";
+        let mallUser = JSON.parse(sessionStorage.getItem("mallUser"));
+        let loginContent = ""
+        if (mallUser && mallUser != null) {
+            loginContent = "<li className=\"first\"><a href=\"personal.html\">个人中心</a></li>\n" +
+                "        <li><a href=\"myOrders.html\">我的订单</a></li>" +
+                "<li><a href=\"#\">用户名：" + mallUser.account + "</a></li>";
+            let userid = mallUser.id;
+            $.post("cart.do?method=getCartByUserId&userid=" + userid, function (message) {
+                let cartList = message.data;
+                $("#mycart_nums").text(cartList.length);
+            }, "json")
+        } else {
+            loginContent = "<p className=\"loginfo\">[<a href=\"login.html\">登录</a> " +
+                "<a className=\"reg\" href=\"register.html\">免费注册</a>]</p>";
+        }
+        $(".shortcut").html(loginContent);
+        //购物车点击事件监听
+        $("div").on("click",$(".mycart"),function (e){
+            if (!mallUser || mallUser == null) {
+                e.preventDefault();
+                location.href = "login.html";
             }
-           $(".shortcut").html(loginContent);
-
+        });
 
         //展示导航栏
         $.post("category.do", "method=display", function (result) {
