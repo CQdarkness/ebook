@@ -40,7 +40,7 @@
                 selected=#{selected}
             </if>
         </set>
-        WHERE id=#{id}
+        WHERE goodsid=#{goodsid}
     </update>
     <delete id="deleteByGoodsId">
         DELETE FROM mall_cart WHERE goodsid=#{gid}

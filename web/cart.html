@@ -69,7 +69,21 @@
 <script src="js/includeLogo.js"></script>
 <script type="text/javascript">
     $(function () {
-
+        let mallUser = JSON.parse(sessionStorage.getItem("mallUser"));
+        let userid=null;
+        let goodsid=null;
+        let updateData={
+            "userid":userid,
+            "goodsid":"",
+            "nums":"",
+            "checked":""
+        }
+        if (mallUser && mallUser != null) {
+            userid=mallUser.id;
+        }else{
+            location.href="login.html";
+            return;
+        }
         //购物车展示
         showCart();
         function showCart(){
@@ -166,10 +180,12 @@
         //结算按钮
         $(".btn_pay").on("click",function (e){
             e.preventDefault();
-            //更新购物车
-
         });
+        //更新购物车
 
+        function updateCart(updateData){
+            $.post("cart.do?method=update",updateData,function (message){},"json");
+        }
         function checkeALL() {
             if (!document.getElementById("selAll").checked == false) {
                 $("tbody input").prop("checked", "checkeds");
