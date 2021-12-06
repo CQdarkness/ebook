@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD mappper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dark.mappers.AddressMapper">
+    <select id="findAddressByUserId" resultType="Address">
+        SELECT *
+        FROM mall_address
+        WHERE userid = #{userid}
+    </select>
+    <insert id="insertAddress" parameterType="Address">
+        INSERT INTO mall_address(userid, accept, telphone, province,city,area,address,type)
+        VALUES (#{userid}, #{accept}, #{telphone},#{province},#{city},#{area},#{address},#{type})
+    </insert>
+    <update id="updateAddress" parameterType="Address">
+        UPDATE mall_address
+        <set>
+            <if test="userid!=null">
+                userid=#{userid},
+            </if>
+            <if test="accept!=null">
+                accept=#{accept},
+            </if>
+            <if test="telphone!=null">
+                telphone=#{telphone},
+            </if>
+            <if test="province!=null">
+                province=#{province}
+            </if>
+            <if test="city!=null">
+                city=#{city}
+            </if>
+            <if test="area!=null">
+                area=#{area}
+            </if>
+            <if test="address!=null">
+                address=#{address}
+            </if>
+            <if test="type!=null">
+                type=#{type}
+            </if>
+        </set>
+        WHERE id=#{id}
+    </update>
+</mapper>

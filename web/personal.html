@@ -1,0 +1,200 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>个人中心</title>
+    <link rel="stylesheet" type="text/css" href="css/index.css">
+    <script type="text/javascript" src="js/jquery-3.4.1.js"></script>
+
+    <script id="navTpl" type="text/html">
+        <li><a href="">首页</a></li>
+    </script>
+</head>
+<body class="index">
+<div class="ucenter container">
+    <div class="header" id="header">
+        <h1 class="logo">
+            <a title="" style="background: url(images/logo.png);" href="index.html">电子商务平台</a>
+        </h1>
+        <ul class="shortcut">
+
+        </ul>
+    </div>
+    <div class="navbar">
+        <ul id="goodsType">
+
+        </ul>
+        <div class="mycart">
+            <dl>
+                <dt>
+                    <a href="cart.html">购物车<b name="mycart_nums" id="mycart_nums">0</b>件
+                    </a>
+                </dt>
+                <dd>
+                    <a href="cart.html">去结算</a>
+                </dd>
+            </dl>
+            <!--购物车浮动div 开始-->
+            <div class="shopping" id="div_mycart" style="display: none;">
+                <dl class="cartlist" id="shopcarDiv">
+                </dl>
+            </div>
+
+        </div>
+    </div>
+    <div class="searchbar">
+    </div>
+    <div class="wrapper clearfix">
+        <div class="sidebar f_l">
+            <img src="images/front/ucenter/ucenter.gif" width="180" height="40">
+            <div class="box">
+                <div class="title">
+                    <h2>交易记录</h2>
+                </div>
+                <div class="cont">
+                    <ul class="list">
+                        <li><a href="myOrders.html" class="menu">我的订单</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="box">
+                <div class="title">
+                    <h2 class="bg5">个人设置</h2>
+                </div>
+                <div class="cont">
+                    <ul class="list">
+                        <li><a href="address.html" class="menu">地址管理</a></li>
+                    </ul>
+                    <ul class="list">
+                        <li><a href="headPortrait.html" class="menu">修改头像</a></li>
+                    </ul>
+                    <ul class="list">
+                        <li><a href="modifyPassword.html" class="menu">修改密码</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="main f_r" id="main">
+            <div class="userinfo_bar">
+                <b class="f14">您好，<span id="account">17760990684</span>！欢迎回来!
+                </b>
+            </div>
+            <div class="box clearfix">
+                <h3>用户信息</h3>
+                <dl class="userinfo_box">
+                    <dt>
+                        <a class="ico"><img id="user_ico_img" src="icon/39b71fecf62847fda5069d8bc124eacb.png"
+                                            width="100" height="100" alt=""></a>
+                    </dt>
+                    <dd>
+                        <table width="100%" cellpadding="0" cellspacing="0">
+                            <colgroup>
+                                <col width="350px">
+                            </colgroup>
+                            <tbody>
+                            <tr>
+                                <td>你的订单交易总数量：<b class="red2" id="countOrder">14笔</b></td>
+                            </tr>
+                            <tr>
+                                <td>总消费额：<b class="red2" id="countPrice">￥213</b></td>
+
+                            </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="stat">
+								 <span>待付款订单：<label>(<b class="red2" id="countNotPay">12</b>)
+								</label></span> <span>待确认收货：<label>(<b class="red2" id="countNotReceive">0</b>)
+								</label></span>
+                        </div>
+                    </dd>
+                </dl>
+            </div>
+            <h3 class="bg">我的订单</h3>
+            <div class="box m_10">
+                <table class="list_table" width="100%" cellpadding="0" cellspacing="0">
+                    <colgroup>
+                        <col width="140px">
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th>订单编号</th>
+                        <th>下单日期</th>
+                        <th>收货人</th>
+                        <th>支付方式</th>
+                        <th>总金额</th>
+                        <th>订单状态</th>
+                    </tr>
+                    </thead>
+                    <tbody id="orderData">
+                    <tr>
+                        <td><a href="#" class="orange">16118836719891</a></td>
+                        <td>2021-01-29 09:27:51</td>
+                        <td>许敏</td>
+                        <td>支付宝</td>
+                        <td>￥226</td>
+                        <td>待支付</td>
+                    </tr>
+                    <tr>
+                        <td><a href="#" class="orange">16118029420451</a></td>
+                        <td>2021-01-28 11:02:22</td>
+                        <td>许敏</td>
+                        <td>支付宝</td>
+                        <td>￥110</td>
+                        <td>已支付</td>
+                    </tr>
+                    <tr>
+                        <td><a href="#" class="orange">16118023950311</a></td>
+                        <td>2021-01-28 10:53:15</td>
+                        <td>许敏</td>
+                        <td>支付宝</td>
+                        <td>￥90</td>
+                        <td>待支付</td>
+                    </tr>
+                    <tr>
+                        <td><a href="#" class="orange">16093857463841</a></td>
+                        <td>2020-12-31 11:35:46</td>
+                        <td>许敏</td>
+                        <td>支付宝</td>
+                        <td>￥103</td>
+                        <td>已支付</td>
+                    </tr>
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <td colspan="6" class="t_r"><a class="blue orderlist" href="javascript:void(0)">更多订单&gt;&gt;</a>
+                        </td>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+    <footer id="allFooter"></footer>
+</div>
+<script type="text/javascript" src="js/jquery-3.4.1.js"></script>
+<script src="js/includeAll.js"></script>
+<script>
+$(function (){
+    //获取User
+    let mallUser=JSON.parse(sessionStorage.getItem("mallUser"));
+    let loginContent=""
+    if(mallUser&&mallUser!=null){
+        loginContent="<li className=\"first\"><a href=\"personal.html\">个人中心</a></li>\n" +
+            "        <li><a href=\"myOrders.html\">我的订单</a></li>"+
+            "<li><a href=\"#\">用户名："+mallUser.account+"</a></li>";
+        let userid=mallUser.id;
+        $.post("cart.do?method=getCartByUserId&userid="+userid,function (message){
+            let cartList=message.data;
+            $("#mycart_nums").text(cartList.length);
+        },"json")
+
+    }else{
+        loginContent="<p className=\"loginfo\">[<a href=\"login.html\">登录</a> " +
+            "<a className=\"reg\" href=\"register.html\">免费注册</a>]</p>";
+    }
+    $(".shortcut").html(loginContent);
+})
+</script>
+</body>
+</html>

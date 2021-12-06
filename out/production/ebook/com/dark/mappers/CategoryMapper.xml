@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD mappper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dark.mappers.CategoryMapper">
+    <!--    <resultMap id="CategoryResult" type="Category">-->
+    <!--        <id property="id" column="cid"/>-->
+    <!--        <result property="name" column="cname"/>-->
+    <!--    </resultMap>-->
+    <select id="findCategoryById" resultType="Category">
+        SELECT *
+        FROM mall_category
+        WHERE id = #{id}
+    </select>
+    <select id="findAllCategory" resultType="Category">
+        SELECT *
+        FROM mall_category
+    </select>
+    <insert id="insertCategory" parameterType="Category">
+        INSERT INTO mall_category(name, status, navable, sort)
+        VALUES (#{name}, #{status}, #{navable},#{sort})
+    </insert>
+    <update id="updateCategory" parameterType="Category">
+        UPDATE mall_category
+        <set>
+            <if test="name!=null">
+                name=#{name},
+            </if>
+            <if test="status!=null">
+                status=#{status},
+            </if>
+            <if test="navable!=null">
+                navable=#{navable},
+            </if>
+            <if test="name!=null">
+                sort=#{sort}
+            </if>
+        </set>
+        WHERE id=#{id}
+    </update>
+</mapper>

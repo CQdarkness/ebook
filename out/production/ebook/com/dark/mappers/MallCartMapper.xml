@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD mappper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dark.mappers.MallCartMapper">
+    <resultMap id="MallCartResult" type="MallCart">
+        <association property="goods" column="goodsid" fetchType="lazy" select="com.dark.mappers.GoodsMapper.findGoodsById"></association>
+    </resultMap>
+    <select id="findMallCartByUserId" resultMap="MallCartResult">
+        SELECT *
+        FROM mall_cart
+        WHERE userid = #{userid}
+    </select>
+    <select id="findMallCartByGoodsId" resultMap="MallCartResult">
+        SELECT *
+        FROM mall_cart
+        WHERE goodsid = #{goodsid}
+    </select>
+    <select id="findAllMallCart" resultMap="MallCartResult">
+        SELECT *
+        FROM mall_cart
+    </select>
+    <insert id="insertMallCart" parameterType="MallCart">
+        INSERT INTO mall_cart(userid, goodsid, nums, selected)
+        VALUES (#{userid}, #{goodsid}, #{nums},#{selected})
+    </insert>
+    <update id="updateMallCart" parameterType="MallCart">
+        UPDATE mall_cart
+        <set>
+            <if test="userid!=null">
+                userid=#{userid},
+            </if>
+            <if test="goodsid!=null">
+                goodsid=#{goodsid},
+            </if>
+            <if test="nums!=null">
+                nums=#{nums},
+            </if>
+            <if test="selected!=null">
+                selected=#{selected}
+            </if>
+        </set>
+        WHERE id=#{id}
+    </update>
+    <delete id="deleteByGoodsId">
+        DELETE FROM mall_cart WHERE goodsid=#{gid}
+    </delete>
+</mapper>

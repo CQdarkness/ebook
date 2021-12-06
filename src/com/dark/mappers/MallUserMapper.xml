@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD mappper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dark.mappers.MallUserMapper">
+    <select id="findAllUsers" resultType="MallUser">
+        SELECT * FROM mall_user
+    </select>
+    <select id="findMallUserById" resultType="MallUser">
+        SELECT * FROM mall_user WHERE id=#{id}
+    </select>
+    <select id="loginByAccountAndPassword" resultType="MallUser">
+        SELECT * FROM mall_user WHERE account=#{account} AND password=#{password}
+    </select>
+    <select id="findUserByAccount" resultType="MallUser">
+        SELECT * FROM mall_user WHERE account=#{account}
+    </select>
+    <select id="findUserByEmail" resultType="MallUser">
+        SELECT * FROM mall_user WHERE email=#{email}
+    </select>
+    <insert id="insertMallUser" parameterType="MallUser">
+        INSERT INTO mall_user(account,password,email,avatar,score,regtime,vcode,status)
+        VALUES (#{account},#{password},#{email},#{avatar},#{score},#{regtime},#{vcode},#{status})
+    </insert>
+    <update id="updateUser" parameterType="MallUser">
+        UPDATE mall_user SET
+            account=#{account},
+            password=#{password},
+            email=#{email},
+            avatar=#{avatar},
+            score=#{score},
+            regtime=#{regtime},
+            vcode=#{vcode},
+            status=#{status}
+            WHERE
+            account=#{account}
+    </update>
+</mapper>
