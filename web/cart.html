@@ -103,7 +103,6 @@
                 $("tbody input").prop("checked", "checkeds");
             }, "json");
         }
-
         //全选全不选
         $("#selAll").on("click",function (e){
             if($(e.target).prop("checked")){
@@ -164,6 +163,12 @@
                 }
             }
         });
+        //结算按钮
+        $(".btn_pay").on("click",function (e){
+            e.preventDefault();
+            //更新购物车
+
+        });
 
         function checkeALL() {
             if (!document.getElementById("selAll").checked == false) {
@@ -172,7 +177,6 @@
                 $("tbody input").prop("checked", "");
             }
         }
-
         document.getElementById("selAll").addEventListener('click', checkeALL);
     });
 </script>
