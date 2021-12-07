@@ -160,7 +160,7 @@ public class GoodsServlet extends BaseServlet {
             searchByName = null;
         }
         Integer categoryId = null;
-        if (searchByCategoryId != null) {
+        if (!"null".equals(searchByCategoryId)) {
             categoryId = Integer.parseInt(searchByCategoryId);
         }
         pageInfo = goodsService.searchGoodsByNameAndCategoryId(searchByName, categoryId

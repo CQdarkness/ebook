@@ -66,13 +66,20 @@
         }
         $(".shortcut").html(loginContent);
         //购物车点击事件监听
-        $("div").on("click",$(".mycart"),function (e){
+        $(".mycart").on("click",function (e){
             if (!mallUser || mallUser == null) {
                 e.preventDefault();
                 location.href = "login.html";
             }
         });
-
+        //搜索按钮监听
+        $("#search-btn").on("click",function (e){
+                e.preventDefault();
+                // 搜索框内容存入SessionStorage
+                sessionStorage.setItem("searchname",$("#word").val());
+                location.href = "goods.html";
+        });
+        $("#word").val(sessionStorage.getItem("searchname"));
         //展示导航栏
         $.post("category.do", "method=display", function (result) {
             showCategories(result);
@@ -99,9 +106,9 @@
             let navContent = "<li><a href='goods.html'>首页</a></li>";
             let allSortContent = "";
             for (let i = 0; i < categories.length; i++) {
-                allSortContent += "<a href='goods.html'><li>" + categories[i].name + "</li></a>"
+                allSortContent += "<a href='goods.html?cid="+categories[i].id+"'><li>" + categories[i].name + "</li></a>"
                 if (categories[i].navable == "y") {
-                    navContent += "<li><a href='goods.html'>" + categories[i].name + "</a></li>"
+                    navContent += "<li><a href='goods.html?cid="+categories[i].id+"'>" + categories[i].name + "</a></li>"
                 }
             }
             $("#goodsType").append(navContent);
