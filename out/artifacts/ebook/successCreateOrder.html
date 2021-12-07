@@ -1,0 +1,105 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>提交订单-蜗牛图书商城</title>
+    <link rel="stylesheet" type="text/css" href="css/index.css">
+    <script src="js/jquery-3.4.1.js"></script>
+    <script src="js/private/global.js"></script>
+    <script src="js/includeLogo.js"></script>
+    <script>
+        $(function () {
+            let orderno = getUrlParam("orderno");
+            $("#orderno1").text(orderno);
+            //渲染数据
+            $.post("order.do?method=displayOrderById&orderno=" + orderno, function (message) {
+                let orderInfo = message.data;
+                $("#totalMoney").text(orderInfo.money);
+                $("#payType1").text((orderInfo.paytype == 1 ? "支付宝" : "微信"))
+            }, "json")
+
+            //获取url中的参数
+            function getUrlParam(name) {
+                let reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+                let r = window.location.search.substr(1).match(reg);  //匹配目标参数
+                if (r != null) return unescape(r[2]);
+                return null; //返回参数值
+            }
+
+        })
+    </script>
+</head>
+<body class="second">
+<div class="brand_list container_2">
+    <header id="allHeader"></header>
+    <div class="wrapper clearfix">
+        <div class="position mt_10">
+            <span>您当前的位置：</span> <a href=""> 首页</a> » 成功提交订单
+        </div>
+        <div class="myshopping m_10">
+            <ul class="order_step">
+                <li><span class="first">1、查看购物车</span></li>
+                <li class="current_prev"><span>2、填写核对订单信息</span></li>
+                <li class="last_current"><span>3、成功提交订单</span></li>
+            </ul>
+        </div>
+
+        <div class="cart_box m_10">
+            <div class="title">成功提交订单</div>
+            <div class="cont">
+                <p class="order_stats">
+                    <img width="48px" height="51px" alt="" src="images/front/right.gif"><strong
+                        class="f14">订单已提交</strong>
+                </p>
+
+                <div class="stats_box">
+                    <h3>订单信息</h3>
+                    <table width="100%" class="form_table t_l orange">
+                        <colgroup>
+                            <col width="75px">
+                            <col>
+
+                        </colgroup>
+                        <tbody>
+                        <!-- <tr>
+                            <th>订单编号：</th>
+                            <td class="f18 bold red2">WN202010131731268762</td>
+                        </tr>
+                        <tr>
+                            <th>订单金额：</th>
+                            <td class="f18 bold red2">￥<b>413.50</b></td>
+                        </tr> -->
+                        <tr>
+                            <th>订单编号：</th>
+                            <td class="f18 bold red2" id="orderno1">16118836719891</td>
+                        </tr>
+                        <tr>
+                            <th>订单金额：</th>
+                            <td class="f18 bold red2">￥<b id="totalMoney">0.00</b></td>
+                        </tr>
+                        <tr id="payType">
+                            <th>支付方式：</th>
+                            <td class="f18 bold red2" id="payType1">支付宝</td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <!--不是货到付款并且支付方式为线上支付-->
+                    <!-- <th:block th:if="${order.payType ne '2'}"> -->
+                    <form action="pay" method="post" target="_blank">
+                        <input type="hidden" name="oper" value="pay">
+                        <input type="hidden" name="id" value="4">
+                        <input type="hidden" name="orderNo" value="WN202010131731268762">
+                        <input class="submit_pay" type="submit" value="立即支付">
+                    </form>
+                    <!-- </th:block> -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer id="allFooter"></footer>
+</div>
+
+
+</body>
+</html>
