@@ -21,9 +21,9 @@ public class ActiveServlet extends BaseServlet{
             unActiveUser.setStatus("y");
             //更新用户信息
             mallUserService.updateUser(unActiveUser);
-            return "p:/login_user.html";
+            return "p:/login.html";
         }else{
-            return "r:/login_user.html";
+            return "r:/login.html";
         }
     }
 }

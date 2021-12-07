@@ -31,9 +31,6 @@
     <update id="updateMallOrder" parameterType="MallOrder">
         UPDATE mall_order
         <set>
-            <if test="paytype!=null">
-                paytype=#{paytype},
-            </if>
             <if test="paytime!=null">
                 paytime=#{paytime},
             </if>
@@ -41,10 +38,10 @@
                 delivertime=#{delivertime},
             </if>
             <if test="receivetime!=null">
-                receivetime=#{receivetime}
+                receivetime=#{receivetime},
             </if>
             <if test="status!=null">
-                status=#{status}
+                status=#{status},
             </if>
             <if test="isdel!=null">
                 isdel=#{isdel}

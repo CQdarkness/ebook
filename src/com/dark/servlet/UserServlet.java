@@ -66,6 +66,7 @@ public class UserServlet extends BaseServlet {
                 }
                 //写出结果
                 JsonWriter.write(message, resp);
+                return;
             }
         }else if("checkAccount".equals(op)){
             String account = req.getParameter("account");

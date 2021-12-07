@@ -23,12 +23,13 @@ public class AliPayServlet extends BaseServlet {
     public void pay(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException, AlipayApiException {
         AlipayClient alipayClient = new DefaultAlipayClient("https://openapi.alipaydev.com/gateway.do", Tools.APP_ID, Tools.APP_PRIVATE_KEY, "json", "UTF-8", Tools.ALIPAY_PUBLIC_KEY, "RSA2");
         AlipayTradePagePayRequest request = new AlipayTradePagePayRequest();
-        request.setNotifyUrl("");
-        request.setReturnUrl("");
-        JSONObject bizContent = new JSONObject();
         //获取参数
         String orderno = req.getParameter("orderNo");
         String money = req.getParameter("money");
+        request.setNotifyUrl("");
+        request.setReturnUrl("http://127.0.0.1:8080/ebook/paySuccess.do?method=paied&orderNo="+orderno);
+        JSONObject bizContent = new JSONObject();
+
         String form="{"  +
                 "    \"out_trade_no\":\""+orderno+"\"  ,"  +
                 "    \"product_code\":\"FAST_INSTANT_TRADE_PAY\","  +

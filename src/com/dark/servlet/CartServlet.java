@@ -44,6 +44,7 @@ public class CartServlet extends BaseServlet {
         MallCart mallCart1 = mallCartService.findMallCartByGoodsId(Integer.parseInt(goodsid));
         if (mallCart1 != null) {
             mallCart1.setNums(Integer.parseInt(nums) + mallCart1.getNums());
+            mallCart1.setGoodsid(Integer.parseInt(goodsid));
             //写入数据库
             if (mallCartService.updateMallCart(mallCart1) != 0) {
                 message.setResult("true");

@@ -6,8 +6,132 @@
 <link type="text/css" rel="stylesheet" href="css/index.css" />
 <script src="js/jquery-2.0.3.js"></script>
 <script src="js/jquery.validate.min.js"></script>
+	<script src="js/includeAll.js"></script>
 <script type="text/javascript">
 		$(function(){
+			//设置默认聚焦在用户名输入栏
+			$("#account").focus();
+			let userCheck = false;
+			let emailCheck = false;
+			let valicodeCheck = false;
+			//用户名验证
+			$("#account").blur(function () {
+				//获取name
+				let name = $("#account").val();
+				//空判定
+				if (!name) {
+					$("#account+span").css({color: "red"});
+					$("#account+span").html("用户名不能为空");
+					return;
+				}
+				//设置JQuery的对象
+				$.ajax({
+					type: "post",
+					url: "user.do?method=register",
+					data: "op=checkAccount&account=" + name,
+					async: false,
+					dataType: "json",
+					success: function (result) {
+						if (result.result == "true") {
+							$("#aspan").css({color: "red"});
+							$("#aspan").html("用户名已存在！");
+						} else {
+							$("#aspan").css({color: "green"});
+							$("#aspan").html("用户名可以使用");
+							userCheck = true;
+						}
+					}
+				});
+			});
+			//邮箱验证
+			$("#email").blur(function () {
+				//获取name
+				let emailName = $("#email").val();
+				//空判定
+				if (!emailName) {
+					$("#espan").css({color: "red"});
+					$("#espan").html("邮箱不能为空");
+					return;
+				}
+				//查询邮件重复！
+				$.ajax({
+					type: "GET",
+					url: "user.do?method=register",
+					data: "op=checkEmail&email=" + emailName,
+					async: false,
+					dataType: "json",
+					success: function (result) {
+						if (result.result == "true") {
+							$("#espan").css({color: "red"});
+							$("#espan").html("邮箱已存在！");
+						} else {
+							$("#espan").css({color: "green"});
+							$("#espan").html("邮箱可以使用");
+							emailCheck = true;
+						}
+					}
+				});
+			});
+			//验证码验证
+			$("#pic").blur(function () {
+				//获取name
+				let code = $("#pic").val();
+				//空判定
+				if (!code) {
+					$("#vspan").css({color: "red"});
+					$("#vspan").html("验证码不能为空");
+					return;
+				}
+				//请求服务器的验证码
+				$.ajax({
+					type: "post",
+					url: "user.do?method=register",
+					data: "op=checkAu",
+					async: false,
+					dataType: "json",
+					success: function (result) {
+						console.log(result.valicode)
+						if (result.valicode == $("#pic").val()) {
+							$("#vspan").css({color: "green"});
+							$("#vspan").html("验证码正确");
+							valicodeCheck = true;
+						} else {
+							$("#vspan").css({color: "red"});
+							$("#vspan").html("验证码错误");
+
+						}
+					}
+				});
+			});
+			//使用Ajax完成注册
+			$("#registerbtn").click(function (e) {
+				//禁用原有行为
+				e.preventDefault();
+				if (userCheck && emailCheck && valicodeCheck) {
+					$.ajax({
+						type: "post",//请求类型
+						url: "user.do?method=register&op=register",
+						data: "account="+$("#account").val()+"&password="+$("#pw").val()+"&email="+$("#email").val(),//提交的数据
+						dataType: "json",//预期服务器返回的数据
+						success: function (result) {
+							if (result.result == "true") {
+								alert("注册成功,请查看邮箱激活账户");
+								location.href="login.html";
+							} else {
+								alert("注册失败！");
+							}
+						}
+					});
+				}
+			});
+			//验证码刷新
+			$("#change").click(function (e) {
+				e.preventDefault();
+				let src = "auImage.do?p=" + Math.random();
+				$("#auImg").attr("src", src);
+			});
+
+
 		$("form").validate({
 			rules:{
 				account:{
@@ -63,45 +187,18 @@
 		$.validator.addMethod('isPassword',function(value,element){
 			return this.optional(element) || /^[0-9a-zA-Z]{6,32}$/.test(value);
 		});
-/*		$.validator.addMethod('isRePassword',function(value,element){
-			return this.optional(element);
-		});*/
-/*		$.validator.addMethod('isEmail',function(value,element){
-			return this.optional(element);
-		});*/
-		$.validator.addMethod('isCaptcha',function(value,element){
-			return this.optional(element) || /^[0-9a-zA-Z]{4}$/.test(value);
-		});
-		
+
 		
 	});
-	
-	
-	
-	
-	
-	
 </script>
 </head>
 <body>
 	<div class="brand_list container_2">
 		<div class="header">
-		<h1 class="logo">
-			<a title="" style="background:url(images/logo.png);"
-				href="index.html">电子商务平台</a>
-		</h1>
-		<ul class="shortcut">
-			<li class="first"><a href="personal.html">个人中心</a></li>
-			<li><a href="myOrders.html">我的订单</a></li>
-		</ul>
-		<p class="loginfo">
-			
-			
-	  		[<a href="login.html">登录</a>
-				<a class="reg" href="register.html">免费注册</a>]
-	  		
-		</p>
-	</div>
+			<h1 class="logo">
+				<a title="" style="background:url(images/logo.png);" href="index.html">电子商务平台</a>
+			</h1>
+		</div>
 		<div class="wrapper clearfix">
 			<div class="wrap_box">
 				<h3 class="notice">用户注册</h3>
@@ -119,37 +216,37 @@
 							<tr>
 								<th>用户名：</th>
 								<td><input class="gray" name='account' id="account"
-									type="text" value="" tabindex="1" /><label id="accountmsg">请填写用户名，格式为2-20个字符，可以为字母、数字、下划线和中文</label></td>
+									type="text" value="" tabindex="1" /><span id="aspan"></span><label id="accountmsg">请填写用户名，格式为2-20个字符，可以为字母、数字、下划线和中文</label></td>
 							</tr>
 							<tr>
 								<th>设置密码：</th>
 								<td><input class="gray" type="password" name='password'
-									tabindex="2" id="pw"/><label id="pwmes">填写登录密码，6-32个数字、字母字符</label></td>
+									tabindex="2" id="pw"/><span ></span><label id="pwmes">填写登录密码，6-32个数字、字母字符</label></td>
 							</tr>
 							<tr>
 								<th>确认密码：</th>
 								<td><input class="gray" type="password" name='repassword'
-									tabindex="3" id="rpw"/><label id="rpwmes">重复上面所填写的密码</label></td>
+									tabindex="3" id="rpw"/><span></span><label id="rpwmes">重复上面所填写的密码</label></td>
 							</tr>
 							<tr>
 								<th>电子邮箱：</th>
 								<td><input class="gray" name='email' type="text"
-									tabindex="5" id="email"><label id="emailmes">请填写正确的邮箱地址，该邮箱用于激活账号</label></td>
+									tabindex="5" id="email"><span id="espan"></span><label id="emailmes">请填写正确的邮箱地址，该邮箱用于激活账号</label></td>
 							</tr>
 							<tr>
 								<th>验证码：</th>
 								<td><input type='text' class='gray_s' name='captcha'
-									alt='填写下面图片所示的字符' id="pic" /> <label id="picmes">填写下面图片所示的字符</label></td>
+									alt='填写下面图片所示的字符' id="pic" /><span id="vspan"></span> <label id="picmes">填写下面图片所示的字符</label></td>
 							</tr>
 							<tr class="low">
 								<th></th>
-								<td> <img src='images/captcha.jpg' id='captchaImg'/> <span
+								<td> <img src='auImage.do' id='auImg'/> <span
 									class="light_gray"> 看不清？ <a href="javascript:void(0)"
 										id="change"> 换一张</a> </span> </td>
 							</tr>
 							<tr>
 								<td></td>
-								<td><input class="submit_reg" type="submit"
+								<td><input class="submit_reg" type="button"
 									value="同意一下条款，提交" id="registerbtn"/><label></label></td>
 							</tr>
 						</table>
@@ -202,13 +299,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="footer">
-		<p class="links">
-			<a href="">关于我们</a>|<a href="">常见问题</a>|<a href="">安全交易</a>|<a
-				href="">购买流程</a>|<a href="">如何付款</a>|<a href="">联系我们</a>|<a href="">合作提案</a>
-		</p>
-		Copyright © 2015-2021 <a class="copyys" target="_blank" href="">蜀ICP备01000010号</a>
-	</div>
+		<footer id="allFooter"></footer>
 	</div>
 	<script type="text/javascript" src="js/private/register.js"></script>
 </body>
