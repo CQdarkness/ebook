@@ -4,6 +4,8 @@ import com.dark.dao.MallOrderDao;
 import com.dark.mappers.MallOrderMapper;
 import com.dark.model.MallOrder;
 import com.dark.util.MybatisUtil;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.apache.ibatis.session.SqlSession;
 
 import java.util.List;
@@ -19,10 +21,20 @@ public class MallOrderDaoImpl implements MallOrderDao {
     }
 
     @Override
-    public List<MallOrder> findMallOrderByUserId(Integer userid) {
+    public  List<MallOrder> findMallOrderByUserId(Integer userid) {
         SqlSession sqlSession = MybatisUtil.getSqlSession();
         MallOrderMapper mapper = sqlSession.getMapper(MallOrderMapper.class);
         List<MallOrder> mallOrderByUserId = mapper.findMallOrderByUserId(userid);
+        MybatisUtil.closeSqlSession();
+        return mallOrderByUserId;
+    }
+
+    @Override
+    public  List<MallOrder> findMallOrderByUserIdPage(Integer userid,Integer pageNum,Integer pageSize) {
+        SqlSession sqlSession = MybatisUtil.getSqlSession();
+        MallOrderMapper mapper = sqlSession.getMapper(MallOrderMapper.class);
+        PageHelper.startPage(pageNum,pageSize);
+        List<MallOrder> mallOrderByUserId = mapper.findMallOrderByUserIdPage(userid,pageNum,pageSize);
         MybatisUtil.closeSqlSession();
         return mallOrderByUserId;
     }

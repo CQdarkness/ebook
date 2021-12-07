@@ -182,6 +182,11 @@
         //结算按钮
         $(".btn_pay").on("click", function (e) {
             e.preventDefault();
+            if(!$("[name=goodsid]:checked").val()){
+                alert("无商品，请添加后提交！");
+                location.href="index.html";
+                return;
+            }
             //获取所有选中的checkbox
             let allInput = $("[name='goodsid']");
             //更新购物车

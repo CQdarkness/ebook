@@ -7,6 +7,28 @@
     <script src="js/jquery-3.4.1.js"></script>
     <script src="js/private/global.js"></script>
     <script src="js/includeLogo.js"></script>
+    <script>
+        $(function () {
+            let orderno = getUrlParam("orderno");
+            $("#orderno1").text(orderno);
+            //渲染数据
+            $.post("order.do?method=displayOrderById&orderno=" + orderno, function (message) {
+                let orderInfo = message.data;
+                $("#totalMoney").text(orderInfo.money);
+                $("#payType1").text((orderInfo.paytype == 1 ? "支付宝" : "微信"))
+            }, "json");
+
+
+            //获取url中的参数
+            function getUrlParam(name) {
+                let reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+                let r = window.location.search.substr(1).match(reg);  //匹配目标参数
+                if (r != null) return unescape(r[2]);
+                return null; //返回参数值
+            }
+
+        })
+    </script>
 </head>
 <body class="second">
 <div class="brand_list container_2">
@@ -50,15 +72,15 @@
                         </tr> -->
                         <tr>
                             <th>订单编号：</th>
-                            <td class="f18 bold red2">16118836719891</td>
+                            <td class="f18 bold red2" id="orderno1">16118836719891</td>
                         </tr>
                         <tr>
                             <th>订单金额：</th>
-                            <td class="f18 bold red2">￥<b>226</b></td>
+                            <td class="f18 bold red2">￥<b id="totalMoney">0.00</b></td>
                         </tr>
                         <tr id="payType">
                             <th>支付方式：</th>
-                            <td class="f18 bold red2">支付宝</td>
+                            <td class="f18 bold red2" id="payType1">支付宝</td>
                         </tr>
                         </tbody>
                     </table>

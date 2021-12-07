@@ -16,7 +16,8 @@
                 let orderInfo = message.data;
                 $("#totalMoney").text(orderInfo.money);
                 $("#payType1").text((orderInfo.paytype == 1 ? "支付宝" : "微信"))
-            }, "json")
+            }, "json");
+
 
             //获取url中的参数
             function getUrlParam(name) {

@@ -6,6 +6,7 @@ import com.dark.service.MallOrderService;
 import com.dark.service.impl.MallOrderServiceImpl;
 import com.dark.util.JsonWriter;
 import com.dark.util.Tools;
+import com.github.pagehelper.PageInfo;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -71,6 +72,20 @@ public class OrderServlet extends BaseServlet {
         String userid = req.getParameter("userid");
         List<MallOrder> mallOrderByUserId = mallOrderService.findMallOrderByUserId(Integer.parseInt(userid));
         message.setData(mallOrderByUserId);
+        JsonWriter.write(message,resp);
+    }
+    public void displayOrderByUserIdPage(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        Message message=new Message();
+        Integer pageNum=1;
+        Integer pageSize=4;
+        String userid = req.getParameter("userid");
+        String pageNums = req.getParameter("pageNums");
+        if(pageNums!=null||"".equals(pageNums)){
+            pageNum=Integer.parseInt(pageNums);
+        }
+        PageInfo<MallOrder> pageInfo = mallOrderService.findMallOrderByUserIdPage(Integer.parseInt(userid),pageNum,pageSize);
+        message.setData(pageInfo.getList());
+        message.setSecondData(pageInfo);
         JsonWriter.write(message,resp);
     }
     public void displayOrderById(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

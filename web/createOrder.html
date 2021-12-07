@@ -54,11 +54,11 @@
                              alt=` + cart.goods.name + "(" + cart.goods.description + ")" + `
                              title=` + cart.goods.name + "(" + cart.goods.description + ")" + `>
                     </td>
-                    <td className="t_l"><a href="goodsDetail.html?gid="+` + cart.goods.id + ` className="blue" target="_blank">` + cart.goods.name + "(" + cart.goods.description + ")" + `</a>
+                    <td class="t_l"><a href="goodsDetail.html?gid="+` + cart.goods.id + ` name1="goodsid" value=` + cart.goods.id + `  class="blue" target="_blank">` + cart.goods.name + "(" + cart.goods.description + ")" + `</a>
                     </td>
                     <td>￥<b>` + cart.goods.salesprice + `</b></td>
                     <td>` + cart.nums + `</td>
-                    <td>￥<b className="red2">` + (cart.nums * cart.goods.salesprice).toFixed(2) + `</b></td>
+                    <td>￥<b class="red2">` + (cart.nums * cart.goods.salesprice).toFixed(2) + `</b></td>
                 </tr>`
                         totalMoeny += cart.nums * cart.goods.salesprice;
                     }
@@ -70,6 +70,11 @@
             }, "json");
             //确认提交事件监听
             $("#createOrder-btn").on("click", function (e) {
+                if(!$(".blue").attr("value")){
+                    alert("无商品，请添加后提交！");
+                    location.href="index.html";
+                    return;
+                }
                 //封装数据
                 let accept = $(":radio[name=addresses]:checked").next();
                 let telphone = accept.next();
@@ -77,9 +82,9 @@
                 let city = province.next();
                 let area = city.next();
                 let address = province.text() + city.text() + area.text() + area.next().text();
-                let date=new Date();
-                let orderno="BKM"+timeStamp2String(date);
-                orderno+=(Math.random()*100+100).toFixed(0);
+                let date = new Date();
+                let orderno = "BKM" + timeStamp2String(date);
+                orderno += (Math.random() * 100 + 100).toFixed(0);
                 let data = {
                     "userid": userid,
                     "accept": accept.text(),
@@ -87,24 +92,32 @@
                     "address": address,
                     "money": $("#final_sum").text(),
                     "paytype": $(":radio[name=paytype]:checked").attr("value"),
-                    "orderno":orderno
+                    "orderno": orderno
                 }
                 // 存入数据库
                 $.post("order.do?method=addOrder", data, function (message) {
-                }, "json")
-                location.href = "successCreateOrder.html?orderno=" +orderno;
+                }, "json");
+                //删除购物车
+                //获取所有物品ID
+                let allgoods = $(".blue");
+                for (let i = 0; i < allgoods.length; i++) {
+                    $.post("cart.do?method=delete&gid=" + $(allgoods[i]).attr("value"), function (message) {
+                    }, "json");
+                }
+                location.href = "successCreateOrder.html?orderno=" + orderno;
             });
+
             //格式化日期
-            function timeStamp2String(time){
+            function timeStamp2String(time) {
                 let datetime = new Date();
                 datetime.setTime(time);
                 let year = datetime.getFullYear();
                 let month = datetime.getMonth() + 1 < 10 ? "0" + (datetime.getMonth() + 1) : datetime.getMonth() + 1;
                 let date = datetime.getDate() < 10 ? "0" + datetime.getDate() : datetime.getDate();
-                let hour = datetime.getHours()< 10 ? "0" + datetime.getHours() : datetime.getHours();
-                let minute = datetime.getMinutes()< 10 ? "0" + datetime.getMinutes() : datetime.getMinutes();
-                let second = datetime.getSeconds()< 10 ? "0" + datetime.getSeconds() : datetime.getSeconds();
-                return year + month +  date+hour+minute+second;
+                let hour = datetime.getHours() < 10 ? "0" + datetime.getHours() : datetime.getHours();
+                let minute = datetime.getMinutes() < 10 ? "0" + datetime.getMinutes() : datetime.getMinutes();
+                let second = datetime.getSeconds() < 10 ? "0" + datetime.getSeconds() : datetime.getSeconds();
+                return year + month + date + hour + minute + second;
             }
         });
 

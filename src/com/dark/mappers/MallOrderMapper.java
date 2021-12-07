@@ -1,6 +1,8 @@
 package com.dark.mappers;
 
 import com.dark.model.MallOrder;
+import com.github.pagehelper.PageInfo;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -11,6 +13,15 @@ public interface MallOrderMapper {
      * @return
      */
     MallOrder findMallOrderById(String orderno);
+
+    /**
+     * 根据用户ID查订单
+     * @param userid
+     * @param pageSize 每页数据
+     * @param pageNum  第几页
+     * @return
+     */
+    List<MallOrder> findMallOrderByUserIdPage(@Param("userid") Integer userid, Integer pageNum, Integer pageSize);
 
     /**
      * 根据用户ID查订单

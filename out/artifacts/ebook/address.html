@@ -235,8 +235,8 @@
                                 "<td>" + addressList[i].address + "</td>" +
                                 "<td>" + addressList[i].telphone + "</td>" +
                                 "<td><a class=\"blue\" href=\"javascript:void(0)\" value=" + addressList[i].id + " >修改</a>" +
+                                "  <a class=\"blue\" href=\"javascript:void(0)\" value=" + addressList[i].id + " >删除</a>  " +
                                 (addressList[i].type == "y" ? "| 默认地址" : "") +
-                                "<td><a class=\"blue\" href=\"javascript:void(0)\" value=" + addressList[i].id + " >删除</a>" +
                                 "</td>" + "</tr>";
                         }
                         $("#addressdata").html(addressContent);
