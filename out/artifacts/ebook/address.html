@@ -213,6 +213,9 @@
 </div>
 <script src="js/jquery-3.6.0.js"></script>
 <script>
+    function exitOut(){
+        sessionStorage.setItem("mallUser",null);
+    }
     $(function () {
             //获取User
             let mallUser = JSON.parse(sessionStorage.getItem("mallUser"));
@@ -220,7 +223,8 @@
             if (mallUser && mallUser != null) {
                 loginContent = "<li className=\"first\"><a href=\"personal.html\">个人中心</a></li>\n" +
                     "        <li><a href=\"myOrders.html\">我的订单</a></li>" +
-                    "<li><a href=\"#\">用户名：" + mallUser.account + "</a></li>";
+                    "<li><a href=\"#\">用户名：" + mallUser.account + "</a></li>"+
+                    "<li><a href=\"index.html\" onclick='exitOut()'>退出</a></li>";
                 var userid = mallUser.id;
                 showAddress();
 
@@ -235,8 +239,8 @@
                                 "<td>" + addressList[i].address + "</td>" +
                                 "<td>" + addressList[i].telphone + "</td>" +
                                 "<td><a class=\"blue\" href=\"javascript:void(0)\" value=" + addressList[i].id + " >修改</a>" +
+                                "  <a class=\"blue\" href=\"javascript:void(0)\" value=" + addressList[i].id + " >删除</a>  " +
                                 (addressList[i].type == "y" ? "| 默认地址" : "") +
-                                "<td><a class=\"blue\" href=\"javascript:void(0)\" value=" + addressList[i].id + " >删除</a>" +
                                 "</td>" + "</tr>";
                         }
                         $("#addressdata").html(addressContent);

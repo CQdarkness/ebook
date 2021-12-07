@@ -22,7 +22,7 @@ public class GoodsServlet extends BaseServlet {
     private GoodsService goodsService = new GoodsServiceImpl();
     private PageInfo<Goods> pageInfo;
     private List<Goods> goodsList;
-    private Integer pageSize = 5;
+    private Integer pageSize = 6;
     public void add(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         //获取表单数据
         String name = req.getParameter("name");
@@ -160,7 +160,7 @@ public class GoodsServlet extends BaseServlet {
             searchByName = null;
         }
         Integer categoryId = null;
-        if (searchByCategoryId != null) {
+        if (!"null".equals(searchByCategoryId)) {
             categoryId = Integer.parseInt(searchByCategoryId);
         }
         pageInfo = goodsService.searchGoodsByNameAndCategoryId(searchByName, categoryId

@@ -1,6 +1,7 @@
 package com.dark.service;
 
 import com.dark.model.MallOrder;
+import com.github.pagehelper.PageInfo;
 
 import java.util.List;
 
@@ -15,7 +16,16 @@ public interface MallOrderService {
     /**
      * 根据用户ID查订单
      * @param userid
-     * @return
+     * @param pageNum 第几页
+     * @param pageSize 每页几条数据
+     * @return pageInfo对象
+     */
+    PageInfo<MallOrder> findMallOrderByUserIdPage(Integer userid,Integer pageNum,Integer pageSize);
+
+    /**
+     * 根据用户ID查订单
+     * @param userid
+     * @return pageInfo对象
      */
     List<MallOrder> findMallOrderByUserId(Integer userid);
 

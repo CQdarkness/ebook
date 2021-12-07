@@ -4,6 +4,7 @@ import com.dark.dao.MallOrderDao;
 import com.dark.dao.impl.MallOrderDaoImpl;
 import com.dark.model.MallOrder;
 import com.dark.service.MallOrderService;
+import com.github.pagehelper.PageInfo;
 
 import java.util.List;
 
@@ -15,7 +16,15 @@ public class MallOrderServiceImpl implements MallOrderService {
     }
 
     @Override
+    public PageInfo<MallOrder> findMallOrderByUserIdPage(Integer userid,Integer pageNum,Integer pageSize) {
+        List<MallOrder> mallOrderByUserId = mallOrderDao.findMallOrderByUserIdPage(userid, pageNum, pageSize);
+        PageInfo<MallOrder> pageInfo=new PageInfo<>(mallOrderByUserId);
+        return pageInfo;
+    }
+
+    @Override
     public List<MallOrder> findMallOrderByUserId(Integer userid) {
+
         return mallOrderDao.findMallOrderByUserId(userid);
     }
 

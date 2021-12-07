@@ -93,17 +93,17 @@
                             </colgroup>
                             <tbody>
                             <tr>
-                                <td>你的订单交易总数量：<b class="red2" id="countOrder">14笔</b></td>
+                                <td>你的订单交易总数量：<b class="red2" id="countOrder">0笔</b></td>
                             </tr>
                             <tr>
-                                <td>总消费额：<b class="red2" id="countPrice">￥213</b></td>
+                                <td>总消费额：<b class="red2" id="countPrice">￥0.00</b></td>
 
                             </tr>
                             </tbody>
                         </table>
 
                         <div class="stat">
-								 <span>待付款订单：<label>(<b class="red2" id="countNotPay">12</b>)
+								 <span>待付款订单：<label>(<b class="red2" id="countNotPay">0</b>)
 								</label></span> <span>待确认收货：<label>(<b class="red2" id="countNotReceive">0</b>)
 								</label></span>
                         </div>
@@ -127,42 +127,11 @@
                     </tr>
                     </thead>
                     <tbody id="orderData">
-                    <tr>
-                        <td><a href="#" class="orange">16118836719891</a></td>
-                        <td>2021-01-29 09:27:51</td>
-                        <td>许敏</td>
-                        <td>支付宝</td>
-                        <td>￥226</td>
-                        <td>待支付</td>
-                    </tr>
-                    <tr>
-                        <td><a href="#" class="orange">16118029420451</a></td>
-                        <td>2021-01-28 11:02:22</td>
-                        <td>许敏</td>
-                        <td>支付宝</td>
-                        <td>￥110</td>
-                        <td>已支付</td>
-                    </tr>
-                    <tr>
-                        <td><a href="#" class="orange">16118023950311</a></td>
-                        <td>2021-01-28 10:53:15</td>
-                        <td>许敏</td>
-                        <td>支付宝</td>
-                        <td>￥90</td>
-                        <td>待支付</td>
-                    </tr>
-                    <tr>
-                        <td><a href="#" class="orange">16093857463841</a></td>
-                        <td>2020-12-31 11:35:46</td>
-                        <td>许敏</td>
-                        <td>支付宝</td>
-                        <td>￥103</td>
-                        <td>已支付</td>
-                    </tr>
+
                     </tbody>
                     <tfoot>
                     <tr>
-                        <td colspan="6" class="t_r"><a class="blue orderlist" href="javascript:void(0)">更多订单&gt;&gt;</a>
+                        <td colspan="6" class="t_r"><a class="blue orderlist" href="myOrders.html">更多订单&gt;&gt;</a>
                         </td>
                     </tr>
                     </tfoot>
@@ -175,15 +144,20 @@
 <script type="text/javascript" src="js/jquery-3.4.1.js"></script>
 <script src="js/includeAll.js"></script>
 <script>
+    function exitOut(){
+        sessionStorage.setItem("mallUser",null);
+    }
 $(function (){
     //获取User
     let mallUser=JSON.parse(sessionStorage.getItem("mallUser"));
     let loginContent=""
+    let userid="";
     if(mallUser&&mallUser!=null){
         loginContent="<li className=\"first\"><a href=\"personal.html\">个人中心</a></li>\n" +
             "        <li><a href=\"myOrders.html\">我的订单</a></li>"+
-            "<li><a href=\"#\">用户名："+mallUser.account+"</a></li>";
-        let userid=mallUser.id;
+            "<li><a href=\"#\">用户名："+mallUser.account+"</a></li>"+
+            "<li><a href=\"index.html\" onclick='exitOut()'>退出</a></li>";
+         userid=mallUser.id;
         $.post("cart.do?method=getCartByUserId&userid="+userid,function (message){
             let cartList=message.data;
             $("#mycart_nums").text(cartList.length);
@@ -194,6 +168,54 @@ $(function (){
             "<a className=\"reg\" href=\"register.html\">免费注册</a>]</p>";
     }
     $(".shortcut").html(loginContent);
+
+    //订单渲染
+    $.post("order.do?method=displayOrderByUserId&userid="+userid,function (message){
+        let orderList=message.data;
+        let unpayOrder=0;
+        let totalCostMoney=0;
+        let countOrder=0;
+        let content="";
+        let count=0;
+        for (let order of orderList){
+            //1为未支付，0为支付
+            if(order.status==1){
+                unpayOrder++;
+            }else{
+                totalCostMoney+=order.money;
+            }
+            countOrder++;
+            //只渲染4条数据
+            if(count<4){
+                content+=
+                    `<tr>
+                        <td><a href="#" class="orange">`+order.orderno+`</a></td>
+                        <td>`+timeStamp2String(order.ordertime)+`</td>
+                        <td>`+order.accept+`</td>
+                        <td>`+(order.paytype==1?"支付宝":"微信")+`</td>
+                        <td>￥`+order.money+`</td>
+                        <td>`+(order.status==1?"未支付":"已支付")+`</td>
+                    </tr>`;
+                count++;
+            }
+        }
+        $("#orderData").html(content);
+        $("#countNotPay").html(unpayOrder);
+        $("#countOrder").html(countOrder);
+        $("#countPrice").html(totalCostMoney);
+    },"json");
+    //格式化日期
+    function timeStamp2String(time){
+        let datetime = new Date();
+        datetime.setTime(time);
+        let year = datetime.getFullYear();
+        let month = datetime.getMonth() + 1 < 10 ? "0" + (datetime.getMonth() + 1) : datetime.getMonth() + 1;
+        let date = datetime.getDate() < 10 ? "0" + datetime.getDate() : datetime.getDate();
+        let hour = datetime.getHours()< 10 ? "0" + datetime.getHours() : datetime.getHours();
+        let minute = datetime.getMinutes()< 10 ? "0" + datetime.getMinutes() : datetime.getMinutes();
+        let second = datetime.getSeconds()< 10 ? "0" + datetime.getSeconds() : datetime.getSeconds();
+        return year +"-"+ month +"-" +  date +" "+hour +":"+minute +":"+second;
+    }
 })
 </script>
 </body>

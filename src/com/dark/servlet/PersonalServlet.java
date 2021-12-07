@@ -1,11 +1,10 @@
 package com.dark.servlet;
 
-import com.dark.model.Address;
-import com.dark.model.AllReion;
-import com.dark.model.MallRegion;
-import com.dark.model.Message;
+import com.dark.model.*;
 import com.dark.service.AddressService;
+import com.dark.service.MallOrderService;
 import com.dark.service.impl.AddressServiceImpl;
+import com.dark.service.impl.MallOrderServiceImpl;
 import com.dark.util.JsonWriter;
 import com.dark.util.Tools;
 
@@ -78,7 +77,7 @@ public class PersonalServlet extends BaseServlet {
         //非空判定
         if (addressId == null || "".equals(addressId) || accept == null || "".equals(accept) || telphone == null || "".equals(telphone)
                 || province == null || "".equals(province) || city == null || "".equals(city) || area == null || "".equals(area)
-                || address2 == null || "".equals(address2) || type == null || "".equals(type)|| userid == null || "".equals(userid)) {
+                || address2 == null || "".equals(address2) || type == null || "".equals(type) || userid == null || "".equals(userid)) {
             message.setResult("false");
             message.setCode(Tools.DATANULL);
             JsonWriter.write(message, resp);
@@ -134,9 +133,9 @@ public class PersonalServlet extends BaseServlet {
         JsonWriter.write(message, resp);
     }
 
-    public void displayAddressById(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
+    public void displayAddressById(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Message message = new Message();
-        //获取USERID
+        //获取ID
         String addressId = req.getParameter("addressId");
         if (addressId == null || "".equals(addressId)) {
             message.setResult("false");
@@ -149,6 +148,7 @@ public class PersonalServlet extends BaseServlet {
         message.setData(addressById);
         JsonWriter.write(message, resp);
     }
+
     public void displayAllProvinces(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Message message = new Message();
         //获取所有父地区
@@ -182,4 +182,7 @@ public class PersonalServlet extends BaseServlet {
         //写出
         JsonWriter.write(message, resp);
     }
+
+
+
 }

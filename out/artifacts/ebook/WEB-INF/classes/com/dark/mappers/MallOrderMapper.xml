@@ -15,7 +15,12 @@
     <select id="findMallOrderByUserId" resultType="MallOrder">
         SELECT *
         FROM mall_order
-        WHERE userid = #{userid}
+        WHERE userid = #{userid} ORDER BY ordertime DESC
+    </select>
+    <select id="findMallOrderByUserIdPage" resultType="MallOrder">
+        SELECT *
+        FROM mall_order
+        WHERE userid = #{userid} ORDER BY ordertime DESC
     </select>
     <insert id="insertMallOrder" parameterType="MallOrder">
         INSERT INTO mall_order(orderno, userid, ordertime, accept, telphone, address, money, paytype, paytime,
@@ -26,9 +31,6 @@
     <update id="updateMallOrder" parameterType="MallOrder">
         UPDATE mall_order
         <set>
-            <if test="paytype!=null">
-                paytype=#{paytype},
-            </if>
             <if test="paytime!=null">
                 paytime=#{paytime},
             </if>
@@ -36,10 +38,10 @@
                 delivertime=#{delivertime},
             </if>
             <if test="receivetime!=null">
-                receivetime=#{receivetime}
+                receivetime=#{receivetime},
             </if>
             <if test="status!=null">
-                status=#{status}
+                status=#{status},
             </if>
             <if test="isdel!=null">
                 isdel=#{isdel}

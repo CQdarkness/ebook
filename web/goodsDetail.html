@@ -23,11 +23,34 @@
                     "<li>作者：" + goods.author + "</li><li>出版社：" + goods.publisher + "</li><li>出版时间：" + goods.pubtime + "</li>" +
                     "<li>库存：现货<span>(<label id=\"data_storeNums\">" + goods.stock + "</label>)</span></li>"
                 $("#infor").html(content);
-                $("#title").html(goods.description);
+                $("#title").html(goods.name+"("+goods.description+")");
                 $("#pic").attr("src", goods.image);
             }, "json");
             //购物车事件注册
             $("#joinCarBtn").click(function (e) {
+                hrefToCart();
+            });
+            $("#buyNowBtn").click(function (e) {
+                hrefToCart();
+            });
+            //数量变化
+            let buyNums = 1;
+            $("#add").click(function (e) {
+                buyNums++;
+                $("#buyNums").attr("value", buyNums);
+            })
+            $("#reduce").click(function (e) {
+                if (buyNums > 1) {
+                    buyNums--;
+                    $("#buyNums").attr("value", buyNums);
+                }
+            })
+            function hrefToCart(){
+                if(userid==null||!userid){
+                    alert("未登录！")
+                    location.href="login.html";
+                    return;
+                }
                 //获取参数
                 let data = {
                     "userid": userid,
@@ -55,20 +78,7 @@
                         window.location.href = "cart.html";
                     }
                 }, "json");
-            });
-            //数量变化
-            let buyNums = 1;
-            $("#add").click(function (e) {
-                buyNums++;
-                $("#buyNums").attr("value", buyNums);
-            })
-            $("#reduce").click(function (e) {
-                if (buyNums > 1) {
-                    buyNums--;
-                    $("#buyNums").attr("value", buyNums);
-                }
-            })
-
+            }
             //获取url中的参数
             function getUrlParam(name) {
                 let reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
@@ -98,18 +108,9 @@
     <header id="allHeader"></header>
     <div class="wrapper clearfix">
         <div class="summary">
-            <h2 id="title">人类群星闪耀时 (“传记之王”茨威格传世之作，德语翻译泰斗邵灵侠倾情翻译，足本定本。国家推荐暑期学生阅读经典！一瞬间的选择，却是人类命运的转变，耻辱与光荣只在一念之间。)</h2>
+            <h2 id="title"></h2>
             <!--基本信息区域-->
             <ul id="infor">
-                <li><span class="f_r light_gray">图书编号：<label id="data_goodsNo">9053050544932</label></span></li>
-                <li id="priceLi">销售价：￥<b class="price red2"><span class="f30" id="real_price">39</span></b></li>
-                <li>市场价：￥
-                    <del id="data_marketPrice">50</del>
-                </li>
-                <li>作者：（奥）斯蒂芬・茨威格编 ; 邵灵</li>
-                <li>出版社：开明出版社</li>
-                <li>出版时间：2018-06-01</li>
-                <li>库存：现货<span>(<label id="data_storeNums">963</label>)</span></li>
             </ul>
             <div class="current">
                 <dl class="m_10 clearfix">

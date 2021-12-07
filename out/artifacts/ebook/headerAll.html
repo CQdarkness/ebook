@@ -47,32 +47,43 @@
     </div>
 </div>
 <script>
+    function exitOut(){
+        sessionStorage.setItem("mallUser",null);
+    }
     $(function () {
         //获取User
         let mallUser = JSON.parse(sessionStorage.getItem("mallUser"));
         let loginContent = ""
         if (mallUser && mallUser != null) {
-            loginContent = "<li className=\"first\"><a href=\"personal.html\">个人中心</a></li>\n" +
+            loginContent = "<li class=\"first\"><a href=\"personal.html\">个人中心</a></li>\n" +
                 "        <li><a href=\"myOrders.html\">我的订单</a></li>" +
-                "<li><a href=\"#\">用户名：" + mallUser.account + "</a></li>";
+                "<li><a href=\"personal.html\">用户名：" + mallUser.account + "</a></li>"+
+                "<li><a href=\"index.html\" onclick='exitOut()'>退出</a></li>";
             let userid = mallUser.id;
             $.post("cart.do?method=getCartByUserId&userid=" + userid, function (message) {
                 let cartList = message.data;
                 $("#mycart_nums").text(cartList.length);
             }, "json")
         } else {
-            loginContent = "<p className=\"loginfo\">[<a href=\"login.html\">登录</a> " +
-                "<a className=\"reg\" href=\"register.html\">免费注册</a>]</p>";
+            loginContent = "<p class=\"loginfo\">[<a href=\"login.html\">登录</a> " +
+                "<a class=\"reg\" href=\"register.html\">免费注册</a>]</p>";
         }
         $(".shortcut").html(loginContent);
         //购物车点击事件监听
-        $("div").on("click",$(".mycart"),function (e){
+        $(".mycart").on("click",function (e){
             if (!mallUser || mallUser == null) {
                 e.preventDefault();
                 location.href = "login.html";
             }
         });
-
+        //搜索按钮监听
+        $("#search-btn").on("click",function (e){
+                e.preventDefault();
+                // 搜索框内容存入SessionStorage
+                sessionStorage.setItem("searchname",$("#word").val());
+                location.href = "goods.html";
+        });
+        $("#word").val(sessionStorage.getItem("searchname"));
         //展示导航栏
         $.post("category.do", "method=display", function (result) {
             showCategories(result);
@@ -99,13 +110,14 @@
             let navContent = "<li><a href='goods.html'>首页</a></li>";
             let allSortContent = "";
             for (let i = 0; i < categories.length; i++) {
-                allSortContent += "<a href='goods.html'><li>" + categories[i].name + "</li></a>"
+                allSortContent += "<a href='goods.html?cid="+categories[i].id+"'><li>" + categories[i].name + "</li></a>"
                 if (categories[i].navable == "y") {
-                    navContent += "<li><a href='goods.html'>" + categories[i].name + "</a></li>"
+                    navContent += "<li><a href='goods.html?cid="+categories[i].id+"'>" + categories[i].name + "</a></li>"
                 }
             }
             $("#goodsType").append(navContent);
             $("#div_allsort").append(allSortContent);
         }
+
     })
 </script>

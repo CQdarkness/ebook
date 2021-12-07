@@ -1,6 +1,7 @@
 package com.dark.dao;
 
 import com.dark.model.MallOrder;
+import com.github.pagehelper.PageInfo;
 
 import java.util.List;
 
@@ -11,6 +12,15 @@ public interface MallOrderDao {
      * @return
      */
     MallOrder findMallOrderById(String orderno);
+
+    /**
+     * 根据用户ID查订单
+     * @param userid
+     * @param pageSize 每页数据
+     * @param pageNum  第几页
+     * @return
+     */
+    List<MallOrder> findMallOrderByUserIdPage(Integer userid, Integer pageNum, Integer pageSize);
 
     /**
      * 根据用户ID查订单
