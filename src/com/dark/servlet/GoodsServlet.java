@@ -22,7 +22,7 @@ public class GoodsServlet extends BaseServlet {
     private GoodsService goodsService = new GoodsServiceImpl();
     private PageInfo<Goods> pageInfo;
     private List<Goods> goodsList;
-    private Integer pageSize = 5;
+    private Integer pageSize = 6;
     public void add(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         //获取表单数据
         String name = req.getParameter("name");

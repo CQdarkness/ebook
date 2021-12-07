@@ -11,13 +11,14 @@
         $(function () {
             let orderno = getUrlParam("orderno");
             $("#orderno1").text(orderno);
+            $("#orderno2").val(orderno);
             //渲染数据
             $.post("order.do?method=displayOrderById&orderno=" + orderno, function (message) {
                 let orderInfo = message.data;
-                $("#totalMoney").text(orderInfo.money);
-                $("#payType1").text((orderInfo.paytype == 1 ? "支付宝" : "微信"))
+                $("#totalMoney").text((orderInfo.money).toFixed(2));
+                $("#payType1").text((orderInfo.paytype == 1 ? "支付宝" : "微信"));
+                $("#moeny1").val((orderInfo.money).toFixed(2));
             }, "json");
-
 
             //获取url中的参数
             function getUrlParam(name) {
@@ -87,10 +88,12 @@
 
                     <!--不是货到付款并且支付方式为线上支付-->
                     <!-- <th:block th:if="${order.payType ne '2'}"> -->
-                    <form action="pay" method="post" target="_blank">
-                        <input type="hidden" name="oper" value="pay">
-                        <input type="hidden" name="id" value="4">
-                        <input type="hidden" name="orderNo" value="WN202010131731268762">
+                    <form action="pay?method=pay" method="post" target="_self">
+<!--                        <input type="hidden" name="oper" value="pay">-->
+<!--                        <input type="hidden" name="id" value="4">-->
+                        <input type="hidden" id="moeny1" name="money" value="">
+                        <input type="hidden" id="orderno2" name="orderNo" value="">
+                        <input type="hidden" id="goodsName" name="goodsName" value="">
                         <input class="submit_pay" type="submit" value="立即支付">
                     </form>
                     <!-- </th:block> -->

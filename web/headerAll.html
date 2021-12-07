@@ -47,22 +47,26 @@
     </div>
 </div>
 <script>
+    function exitOut(){
+        sessionStorage.setItem("mallUser",null);
+    }
     $(function () {
         //获取User
         let mallUser = JSON.parse(sessionStorage.getItem("mallUser"));
         let loginContent = ""
         if (mallUser && mallUser != null) {
-            loginContent = "<li className=\"first\"><a href=\"personal.html\">个人中心</a></li>\n" +
+            loginContent = "<li class=\"first\"><a href=\"personal.html\">个人中心</a></li>\n" +
                 "        <li><a href=\"myOrders.html\">我的订单</a></li>" +
-                "<li><a href=\"#\">用户名：" + mallUser.account + "</a></li>";
+                "<li><a href=\"personal.html\">用户名：" + mallUser.account + "</a></li>"+
+                "<li><a href=\"index.html\" onclick='exitOut()'>退出</a></li>";
             let userid = mallUser.id;
             $.post("cart.do?method=getCartByUserId&userid=" + userid, function (message) {
                 let cartList = message.data;
                 $("#mycart_nums").text(cartList.length);
             }, "json")
         } else {
-            loginContent = "<p className=\"loginfo\">[<a href=\"login.html\">登录</a> " +
-                "<a className=\"reg\" href=\"register.html\">免费注册</a>]</p>";
+            loginContent = "<p class=\"loginfo\">[<a href=\"login.html\">登录</a> " +
+                "<a class=\"reg\" href=\"register.html\">免费注册</a>]</p>";
         }
         $(".shortcut").html(loginContent);
         //购物车点击事件监听
@@ -114,5 +118,6 @@
             $("#goodsType").append(navContent);
             $("#div_allsort").append(allSortContent);
         }
+
     })
 </script>
