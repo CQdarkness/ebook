@@ -17,9 +17,9 @@ public class SuccessPay extends BaseServlet{
         mallOrderById.setStatus(0);
         mallOrderById.setPaytime(new Date());
         if(mallOrderService.updateMallOrder(mallOrderById)!=0){
-            return "r:/myOrders.html";
+            return "p:/myOrders.html";
         }else{
-            return "r:/index.html";
+            return "p:/index.html";
         }
     }
 }

@@ -13,6 +13,10 @@
         $(function () {
             //获取User
             let mallUser = JSON.parse(sessionStorage.getItem("mallUser"));
+            if(mallUser==null||!mallUser){
+                location.href="login.html"
+                return;
+            }
             let loginContent = ""
             let userid = "";
             if (mallUser && mallUser != null) {

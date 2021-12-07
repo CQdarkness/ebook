@@ -213,17 +213,22 @@
 </div>
 <script src="js/jquery-3.6.0.js"></script>
 <script>
-    function exitOut(){
-        sessionStorage.setItem("mallUser",null);
+    function exitOut() {
+        sessionStorage.setItem("mallUser", null);
     }
+
     $(function () {
             //获取User
             let mallUser = JSON.parse(sessionStorage.getItem("mallUser"));
+            if (mallUser == null || !mallUser) {
+                location.href = "login.html"
+                return;
+            }
             let loginContent = ""
             if (mallUser && mallUser != null) {
                 loginContent = "<li className=\"first\"><a href=\"personal.html\">个人中心</a></li>\n" +
                     "        <li><a href=\"myOrders.html\">我的订单</a></li>" +
-                    "<li><a href=\"#\">用户名：" + mallUser.account + "</a></li>"+
+                    "<li><a href=\"#\">用户名：" + mallUser.account + "</a></li>" +
                     "<li><a href=\"index.html\" onclick='exitOut()'>退出</a></li>";
                 var userid = mallUser.id;
                 showAddress();
@@ -286,7 +291,7 @@
                     }
                     if ($(e.target).attr("addressId")) {
                         let addressId = $(e.target).attr("addressId");
-                        $.post("personal.do?method=updateAddress&addressId=" + addressId+"&userid="+userid, data, function (message) {
+                        $.post("personal.do?method=updateAddress&addressId=" + addressId + "&userid=" + userid, data, function (message) {
                             if (message.result == "true") {
                                 alert("修改成功！");
                                 showAddress();

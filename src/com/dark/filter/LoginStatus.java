@@ -11,7 +11,7 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-@WebFilter("/cart.do")
+@WebFilter("/cart.do,/pay,/cart.do,/order.do,/personal.do")
 public class LoginStatus implements Filter {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
@@ -25,9 +25,7 @@ public class LoginStatus implements Filter {
         MallUser mallUser =(MallUser) req.getSession().getAttribute("mallUser");
         if(mallUser==null){
             //未登录，重定向至登录界面
-            message.setResult("false");
-            message.setCode(Tools.UNLOGIN);
-            JsonWriter.write(message,resp);
+            resp.sendRedirect("login.html");
         }
         //更新筛选链
         filterChain.doFilter(req,resp);
