@@ -150,6 +150,12 @@
 $(function (){
     //获取User
     let mallUser=JSON.parse(sessionStorage.getItem("mallUser"));
+    if(mallUser==null||!mallUser){
+        location.href="login.html"
+        return;
+    }
+    $("#user_ico_img").prop("src",mallUser.avatar);
+    $("#account").text(mallUser.account)
     let loginContent=""
     let userid="";
     if(mallUser&&mallUser!=null){
@@ -194,7 +200,7 @@ $(function (){
                         <td>`+order.accept+`</td>
                         <td>`+(order.paytype==1?"支付宝":"微信")+`</td>
                         <td>￥`+order.money+`</td>
-                        <td>`+(order.status==1?"未支付":"已支付")+`</td>
+                        <td>`+(order.status==1?`<a href='successCreateOrder.html?orderno=`+order.orderno+`' style="color: #4b63a7">未支付</a>`:"已支付")+`</td>
                     </tr>`;
                 count++;
             }

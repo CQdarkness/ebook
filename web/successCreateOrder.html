@@ -9,6 +9,11 @@
     <script src="js/includeLogo.js"></script>
     <script>
         $(function () {
+            let mallUser=JSON.parse(sessionStorage.getItem("mallUser"));
+            if(mallUser==null||!mallUser){
+                location.href="login.html"
+                return;
+            }
             let orderno = getUrlParam("orderno");
             $("#orderno1").text(orderno);
             $("#orderno2").val(orderno);

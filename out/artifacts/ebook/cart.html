@@ -70,6 +70,10 @@
 <script type="text/javascript">
     $(function () {
         let mallUser = JSON.parse(sessionStorage.getItem("mallUser"));
+        if(mallUser==null||!mallUser){
+            location.href="login.html"
+            return;
+        }
         let userid = mallUser.id;
         let goodsid = null;
         let updateData = {

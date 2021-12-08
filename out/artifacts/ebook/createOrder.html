@@ -103,7 +103,10 @@
                     $.post("cart.do?method=delete&gid=" + $(allgoods[i]).attr("value"), function (message) {
                     }, "json");
                 }
-                location.href = "successCreateOrder.html?orderno=" + orderno;
+                setTimeout(function (){
+                    location.href = "successCreateOrder.html?orderno=" + orderno;
+                },100);
+
             });
 
             //格式化日期
