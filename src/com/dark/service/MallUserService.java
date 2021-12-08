@@ -2,6 +2,8 @@ package com.dark.service;
 
 import com.dark.model.MallUser;
 
+import java.util.List;
+
 public interface MallUserService {
     //登录业务
     MallUser login(String account, String psw);
@@ -15,4 +17,6 @@ public interface MallUserService {
     MallUser findUserByEmail(String email);
     //更新用户信息
     Integer updateUser(MallUser mallUser);
+    //所有用户
+    List<MallUser> findAllUsers();
 }

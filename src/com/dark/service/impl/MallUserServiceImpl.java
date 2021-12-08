@@ -6,6 +6,8 @@ import com.dark.excption.UserException;
 import com.dark.model.MallUser;
 import com.dark.service.MallUserService;
 
+import java.util.List;
+
 public class MallUserServiceImpl implements MallUserService {
     private MallUserDao mallUserDao=new MallUserDaoImpl();
     @Override
@@ -43,5 +45,10 @@ public class MallUserServiceImpl implements MallUserService {
     @Override
     public Integer updateUser(MallUser mallUser) {
         return mallUserDao.updateUser(mallUser);
+    }
+
+    @Override
+    public List<MallUser> findAllUsers() {
+        return mallUserDao.findAllUsers();
     }
 }

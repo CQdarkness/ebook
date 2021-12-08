@@ -37,4 +37,16 @@ public class MallOrderServiceImpl implements MallOrderService {
     public Integer updateMallOrder(MallOrder mallOrder) {
         return mallOrderDao.updateMallOrder(mallOrder);
     }
+
+    @Override
+    public Integer deleteOrderByOrderNo(String orderno) {
+        return mallOrderDao.deleteOrderByOrderNo(orderno);
+    }
+
+    @Override
+    public PageInfo<MallOrder> findAllByPage(Integer pageNum, Integer pageSize) {
+        List<MallOrder> mallOrderByUserId = mallOrderDao.findAllByPage(pageNum, pageSize);
+        PageInfo<MallOrder> pageInfo=new PageInfo<>(mallOrderByUserId);
+        return pageInfo;
+    }
 }

@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图书后台管理系统</title>
+    <!-- bootStrap4.6.1 -->
+    <!-- <link rel="stylesheet" href="css/bootstrap.min.css"> -->
+    <!-- css -->
+    <link rel="stylesheet" href="css/booksManager.css">
+    <!-- js -->
+    <script src="js/jquery-3.6.0.min.js"></script>
+    <script src="js/bootstrap.bundle.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script src="js/booksManager.js"></script>
+    <script src="js/tools.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        a {
+            text-decoration: none;
+            color: #005cbf;
+            cursor: pointer;
+        }
+
+        .sideNav h3 {
+            color: rgb(78, 56, 38);
+        }
+
+        .sideNav h2 {
+            color: rgb(64, 78, 83);
+        }
+
+        .container1 {
+            /* border: 1px solid red; */
+            position: absolute;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .header {
+            width: 100%;
+            height: 100px;
+            position: absolute;
+            /* border: 1px solid red; */
+            text-align: center;
+            line-height: 100px;
+            color: white;
+            background-color: rgb(6, 60, 92);
+        }
+
+        .sideNav {
+            position: absolute;
+            /* border: 1px solid red; */
+            background-color: beige;
+            top: 100px;
+            width: 200px;
+            height: 100%;
+        }
+
+        .mainDisplay {
+            position: absolute;
+            border: 1px solid rgb(38, 0, 255);
+            top: 100px;
+            left: 200px;
+            width: 100%;
+            height: 100%;
+            /* background-color: deepskyblue; */
+        }
+
+        .sideNav > ul {
+            text-align: center;
+        }
+
+        .sideNav > ul > li {
+            background-color: rgb(207, 211, 192);
+            margin-bottom: 20px;
+            /* height: 50px; */
+        }
+
+        .sideNav > ul > li:hover {
+            cursor: pointer;
+
+        }
+
+        .sideNav > ul > li li:hover {
+            color: dodgerblue;
+        }
+
+        .display {
+
+            display: block !important;
+        }
+
+        .sideNav > ul > li ul {
+            display: none;
+            line-height: 25px;
+        }
+
+        .display1 {
+            height: 70%;
+        }
+
+        .mainDisplay table {
+            width: 85%;
+            height: 90%;
+            overflow: scroll;
+        }
+
+        .tableDisplay th {
+            width: 100px;
+            background-color: #7abaff;
+            height: 25px;
+        }
+
+        .tableDisplay td {
+            text-align: center;
+            background-color: #c6c8ca;
+        }
+
+        .pageLeft {
+            float: left;
+            margin-left: 20px;
+        }
+
+        .pageRight {
+            float: right;
+            margin-right: 20px;
+        }
+
+        .page {
+            width: 85%;
+            height: 15px;
+        }
+
+        .pageRight span {
+            background-color: #c6c8ca;
+        }
+
+    </style>
+    <script>
+        $(function () {
+            //左侧边栏点击事件监听
+            $(".sideNav>ul>li").click(function (e) {
+                //导航菜单的效果
+                $(e.target.nextElementSibling).toggleClass("display");
+                if (e.target.innerHTML == "分类展示") {
+                    renderCategoryList();
+                } else if (e.target.innerHTML == "增加分类") {
+                    addCategory();
+                } else if (e.target.innerHTML == "商品列表") {
+                    renderGoodsList();
+                } else if (e.target.innerHTML == "增加商品") {
+                    addGoods();
+                } else if (e.target.innerHTML == "用户列表") {
+                    renderUserList();
+                } else if (e.target.innerHTML == "增加用户") {
+                    addUser();
+                }
+            });
+            //展示栏事件监听
+            $(".display1").click(function (e) {
+                if (e.target.innerHTML == "编辑") {
+                    //判断展示类型
+                    let displayName = $(e.target).parent().parent().attr("name");
+                    if ("goods" == display) {
+                        //调用goods的编辑渲染
+                        renderGoodsEdit(e);
+                    } else if ("category" == display) {
+                        //调用category的编辑渲染
+                        renderCategoryEdit(e);
+                    }
+                } else if (e.target.innerHTML == "删除") {
+                    //弹窗确认是否删除
+                    if (confirm("确认删除?")) {
+                        //判断展示类型
+                        let displayName = $(e.target).parent().parent().attr("name");
+                        if ("goods" == display) {
+                            //调用goods的删除渲染
+                            $.ajax({
+                                type: "get",
+                                url: "../goods.do?method=delete",
+                                data: "gid=" + $(e.target).attr("value"),
+                                dataType: "json",
+                                success: function (result) {
+                                    //删除成功,渲染列表
+                                    renderGoodsList();
+                                }
+                            });
+                        } else if ("category" == display) {
+                            //调用category的编辑渲染
+                            $.ajax({
+                                type: "get",
+                                url: "../category.do?method=display",
+                                data: "cid=" + $(e.target).attr("value"),
+                                dataType: "json",
+                                success: function (result) {
+                                    renderCategoryList();
+                                }
+                            });
+                        }
+                    }
+                } else if ($(e.target).val() == "搜索") {
+                    //启用Ajax
+                    $.ajax({
+                        type:"get",
+                        url:$(".searchBtn").attr("name")+".do?op=search",
+                        data:"searchByName="+$(".searchByName").val()+"&searchByCategoryId="+$(".searchByCategoryId").val(),
+                        dataType:"json",
+                        success:function (result){
+                            let goodsList=result.data;
+                            let pageInfo=result.pageInfo;
+                            //渲染
+                            pageToggle(goodsList,pageInfo);
+                        }
+                    })
+                }
+            });
+            //页码栏事件监听
+            $(".page").click(function (e) {
+                //判断是否有页码
+                let nums = $(e.target).attr("value");
+                if (nums) {
+                    $.ajax({
+                        type: "get",
+                        url: $(".page").attr("name") + ".do?op=display",
+                        data: "page=" + nums,
+                        dataType: "json",
+                        success: function (result) {
+                            let goodsList=result.data;
+                            let pageInfo=result.pageInfo;
+                            //渲染
+                            pageToggle(goodsList,pageInfo);
+                        }
+                    })
+                }
+            })
+
+            /**
+             * 商品页面渲染
+             * @param result
+             */
+            function renderGoodsList() {
+                $.ajax({
+                    type: "post",
+                    url: "goods.do",
+                    data: "op=display",
+                    dataType: "json",
+                    success: function (result) {
+                        //获取分类数据
+                        let categories = result.secondData;
+                        //渲染搜索区
+                        goodsSearchBoxRender(categories);
+                        //渲染表格
+                        let goodsList = result.data;
+                        goodsTableRender(goodsList);
+                        //页码展示
+                        let pageInfo = result.pageInfo;
+                        pageBarRender(pageInfo);
+                    }
+                });
+            }
+
+            /**
+             * 商品搜索框
+             * @param categories 分类
+             */
+            function goodsSearchBoxRender(categories){
+                //清空
+                $(".search").children().remove();
+                //添加
+                let searchContent = "<select class='searchByCategoryId'><option value='' selected>未选择</option>";
+                for (let i = 0; i < categories.length; i++) {
+                    searchContent += "<option value=" + categories[i].id + ">" + categories[i].name + "</option>";
+                }
+                searchContent += "</select><input type='text' class='searchByName' placeholder='商品名称'><input type='submit' class='searchBtn' name='goods' value='搜索'>";
+                $(".search").append(searchContent);
+            }
+
+            /**
+             * 渲染商品数据表格
+             * @param goodsList
+             */
+            function goodsTableRender(goodsList){
+                //清空旧的
+                $(".tableDisplay").children().remove();
+                //展示新的
+                let fixedContent = "<tr>" +
+                    "<th>ID</th><th>商品名称</th><th>库存</th><th>市场价</th><th>销售价</th><th>状态</th><th>类别名称</th><th>操作</th>" +
+                    "</tr>"
+                $(".tableDisplay").append(fixedContent);
+                for (let i = 0; i < goodsList.length; i++) {
+                    let content = "<tr name='goods'>" +
+                        "<td>" + goodsList[i].id + "</td>" +
+                        "<td>" + goodsList[i].name + "</td>" +
+                        "<td>" + goodsList[i].stock + "</td>" +
+                        "<td>" + goodsList[i].marketprice + "</td>" +
+                        "<td>" + goodsList[i].salesprice + "</td>" +
+                        "<td>" + (goodsList[i].status == "y" ? "有效" : "失效") + "</td>" +
+                        "<td>" + goodsList[i].category.name + "</td>" +
+                        "<td>" + "<a value=" + goodsList[i].id + ">编辑</a>" + "&nbsp;&nbsp;&nbsp;&nbsp;" + "<a value=" + goodsList[i].id + ">删除</a>" + "</td>" +
+                        "</tr>"
+                    $(".tableDisplay").append(content);
+                }
+            }
+
+            /**
+             * 页码栏渲染
+             * @param pageInfo
+             */
+            function pageBarRender(pageInfo){
+                //设置页码栏div名称
+                $(".page").attr("name", "goods");
+                let page = "<div class='pageLeft'><span>第" + pageInfo.pageNum + "页,</span><span>总共有"
+                    + pageInfo.pages + "页</span></div>" + "<div class='pageRight'>"
+                if (pageInfo.pageNum != 1) {
+                    page += "<a value=" + pageInfo.prePage + ">上一页</a>&nbsp;&nbsp;"
+                } else {
+                    page += "<span>上一页</span>&nbsp;&nbsp;"
+                }
+                for (let i = 1; i < pageInfo.pages + 1; i++) {
+                    if (pageInfo.pageNum != i) {
+                        page += "<a value=" + i + ">" + i + "</a>&nbsp;&nbsp;"
+                    } else {
+                        page += "<span>" + i + "</span>&nbsp;&nbsp;"
+                    }
+                }
+                if (pageInfo.pageNum != pageInfo.pages) {
+                    page += "<a value=" + pageInfo.nextPage + ">下一页</a>"
+                } else {
+                    page += "<span>下一页</span>"
+                }
+                page += "</div>";
+                console.log(page);
+                //删除旧的
+                $(".page").children().remove();
+                //添加新的
+                $(".page").append(page);
+            }
+
+            /**
+             * 根据列表和分页信息更新表格和页码
+             * @param goodsList
+             * @param pageInfo
+             */
+            function pageToggle(goodsList,pageInfo){
+                //渲染表格数据
+                goodsTableRender(goodsList);
+                //渲染页码数据
+                pageBarRender(pageInfo)
+            }
+
+            /**
+             * 分类列表渲染
+             * @param result
+             */
+            function renderCategoryList() {
+                $.ajax({
+                    type: "post",
+                    url: "category.do",
+                    data: "op=display",
+                    dataType: "json",
+                    success: function (result) {
+                        let categoryList = result.data;
+                        console.log(result.length);
+                        //清空旧的
+                        $(".search").children().remove();
+                        $(".page").children().remove();
+                        $(".tableDisplay").children().remove();
+                        //展示新的
+                        let fixedContent = "<tr>" +
+                            "<th>ID</th><th>类别名称</th><th>状态</th><th>是否为导航</th><th>操作</th>" +
+                            "</tr>"
+                        $(".tableDisplay").append(fixedContent);
+                        for (let i = 0; i < categoryList.length; i++) {
+                            let content = "<tr name='category'>" +
+                                "<td>" + categoryList[i].id + "</td>" +
+                                "<td>" + categoryList[i].name + "</td>" +
+                                "<td>" + (categoryList[i].status == "y" ? "有效" : "失效") + "</td>" +
+                                "<td>" + (categoryList[i].navable == "y" ? "是" : "否") + "</td>" +
+                                "<td>" + "<a value=" + categoryList[i].id + ">编辑</a>" + "&nbsp;&nbsp;&nbsp;&nbsp;" + "<a value=" + categoryList[i].id + ">删除</a>" + "</td>" +
+                                "</tr>"
+                            $(".tableDisplay").append(content);
+                        }
+                    }
+                });
+            }
+
+            /**
+             * 用户列表渲染
+             */
+            function renderUserList() {
+            }
+
+            /**
+             * 商品编辑
+             */
+            function renderGoodsEdit(e) {
+                //获取选中行,拿ID
+                let id = $(e.target).attr("value");
+                let goods = getGoodsById(id);
+                //清除旧的
+                clearOldDisplay();
+                //新内容
+                let content = "<tr><td>" +
+                    "商品名称：<input type='text' class='name'  placeholder='商品名称' value=" + goods.name + ">" +
+                    "商品编号：<input type='text' class='goodsno' placeholder='商品编号' value=" + goods.goodsno + ">" +
+                    "作者：<input type='text' class='author' placeholder='作者' value=" + goods.author + ">" +
+                    "出版社：<input type='text' class='publisher' placeholder='出版社' value=" + goods.publisher + ">" +
+                    "出版时间：<input type='date' class='pubtime' placeholder='出版时间' value=" + goods.pubtime + ">" +
+                    "类别：<select class='categoryid'>";
+                let categories = getCategories();
+                for (let i = 0; i < categories.length; i++) {
+                    content += "<option "+"value=" + categories[i].id +" "+((goods.categoryid == categories[i].id) ? "selected" : "")+ ">" + categories[i].name + "</option>";
+                }
+                content += "</select>描述：<input type='text' class='description' placeholder='描述' value=" +goods.description+ ">" +
+                    "图片：<input type='text' class='image' placeholder='图片' value="+goods.image + ">" +
+                    "库存：<input type='text' class='stock' placeholder='库存' value=" +goods.stock+ ">" +
+                    "市场价：<input type='text' class='marketprice' placeholder='市场价' value=" +goods.marketprice+ ">" +
+                    "销售价：<input type='text' class='salesprice' placeholder='销售价' value=" +goods.salesprice+ ">" +
+                    "销量：<input type='text' class='salenums' placeholder='销量' value=" +goods.salenums+ ">" +
+                    "<input type='checkbox' class='newest' id='newest' checked value='y'><label for='newest'>是否最新？</label>" +
+                    "<input type='checkbox' class='hot' id='hot' checked value='y'><label for='hot'>是否最热？</label>" +
+                    "<input type='checkbox' class='status' id='status' checked value='y'><label for='status'>是否有效？</label>" +
+                    "<input type='submit' class='goodsEditSubmit'  value='提交'>"+
+                    "</td>></tr>";
+                //添加选中行
+                $(".tableDisplay").append(content);
+                //监听提交事件
+                $(".goodsEditSubmit").click(function (){
+                    console.log("ookok");
+                    //封装参数
+                    let param = {
+                        "name":$(".name").val(),
+                        "goodsno":$(".goodsno").val(),
+                        "author":$(".author").val(),
+                        "publisher":$(".publisher").val(),
+                        "pubtime":$(".pubtime").val(),
+                        "categoryid":$(".categoryid").val(),
+                        "description":$(".description").val(),
+                        "image":$(".image").val(),
+                        "stock":$(".stock").val(),
+                        "marketprice":$(".marketprice").val(),
+                        "salesprice":$(".salesprice").val(),
+                        "salenums":$(".salenums").val(),
+                        "newest":$(".newest").val(),
+                        "hot":$(".hot").val(),
+                        "status":$(".status").val()
+                    }
+                    //ajax写入数据库
+                    $.ajax({
+                        type: "get",
+                        url: "goods.do?op=update&updateId=" + $(e.target).attr("value"),
+                        data: param,
+                        dataType: "json",
+                        success: function (result) {
+                            if(result.result=="true"){
+                                alert("修改成功");
+                                //成功后渲染商品列表
+                                renderGoodsList();
+                            }else{
+                                alert("修改失败");
+                            }
+                        }
+                    });
+                })
+            }
+
+            /**
+             * 类别编辑
+             */
+            function renderCategoryEdit(e) {
+                $.ajax({
+                    type: "get",
+                    url: "category.do",
+                    data: "displayName=" + displayName + "&categoryId=" + $(e.target).attr("value"),
+                    dataType: "json",
+                    success: function (result) {
+                        renderCategoryEdit(result);
+                    }
+                });
+            }
+
+            /**
+             * 添加用户
+             */
+            function addUser() {
+            }
+
+            /**
+             * 添加分类
+             */
+            function addCategory() {
+            }
+
+            /**
+             * 添加商品
+             */
+            function addGoods() {
+            }
+
+            /**
+             * 清除旧的主界面展示内容
+             */
+            function clearOldDisplay() {
+                //清除旧的展示内容
+                $(".search").children().remove();
+                $(".tableDisplay").children().remove();
+                $(".page").children().remove();
+            }
+
+            function getCategories() {
+                let res;
+                $.ajax({
+                    type: "post",
+                    url: "category.do",
+                    data: "op=display",
+                    async:false,
+                    dataType: "json",
+                    success: function (result) {
+                        res= result.data;
+                    }
+                })
+                return res;
+            }
+
+            function getAllGoods() {
+                let res;
+                $.ajax({
+                    type: "post",
+                    url: "goods.do",
+                    async:false,
+                    data: "op=display",
+                    dataType: "json",
+                    success: function (result) {
+                       res= result.data;
+                    }
+                })
+                return res;
+            }
+
+            function getGoodsById(id) {
+                let res;
+                $.ajax({
+                    type: "post",
+                    url: "goods.do",
+                    data: "op=getGoodsById&goodsId=" + id,
+                    async:false,
+                    dataType: "json",
+                    success: function (result) {
+                         res=result.data;
+                    }
+                })
+                return res;
+            }
+        })
+    </script>
+</head>
+
+<body>
+<div class="container1">
+    <div class="header">
+        <h1>图书后台管理系统</h1>
+    </div>
+    <div class="sideNav">
+        <ul>
+            <li>
+                <h2>导航菜单</h2>
+            </li>
+            <li class="categoryManager">
+                <h3>分类管理</h3>
+                <ul>
+                    <li><span>分类展示</span></li>
+                    <li><span>增加分类</span></li>
+                </ul>
+            </li>
+            <li class="goodsManager">
+                <h3>商品管理</h3>
+                <ul>
+                    <li><span>商品列表</span></li>
+                    <li><span>增加商品</span></li>
+                </ul>
+            </li>
+            <li class="userManager">
+                <h3>用户管理</h3>
+                <ul>
+                    <li><span>用户列表</span></li>
+                    <li><span>增加用户</span></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <div class="mainDisplay" id="main">
+        <div class="display1">
+            <div class="search"></div>
+            <table>
+                <thead>
+                </thead>
+                <tbody class="tableDisplay">
+                </tbody>
+            </table>
+        </div>
+        <div class="page"></div>
+    </div>
+</div>
+</body>
+
+</html>

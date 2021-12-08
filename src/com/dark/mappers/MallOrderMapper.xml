@@ -22,6 +22,10 @@
         FROM mall_order
         WHERE userid = #{userid} ORDER BY ordertime DESC
     </select>
+    <select id="findAllByPage" resultType="MallOrder">
+        SELECT *
+        FROM mall_order ORDER BY ordertime DESC
+    </select>
     <insert id="insertMallOrder" parameterType="MallOrder">
         INSERT INTO mall_order(orderno, userid, ordertime, accept, telphone, address, money, paytype, paytime,
                                delivertime, receivetime, status, isdel)
@@ -49,4 +53,7 @@
         </set>
         WHERE id=#{id}
     </update>
+    <delete id="deleteOrderByOrderNo">
+        DELETE FROM mall_order WHERE orderno=#{orderno}
+    </delete>
 </mapper>

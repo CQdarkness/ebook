@@ -58,4 +58,24 @@ public class MallOrderDaoImpl implements MallOrderDao {
         MybatisUtil.closeSqlSession();
         return integer;
     }
+
+    @Override
+    public Integer deleteOrderByOrderNo(String orderno) {
+        SqlSession sqlSession = MybatisUtil.getSqlSession();
+        MallOrderMapper mapper = sqlSession.getMapper(MallOrderMapper.class);
+        Integer integer = mapper.deleteOrderByOrderNo(orderno);
+        sqlSession.commit();
+        MybatisUtil.closeSqlSession();
+        return integer;
+    }
+
+    @Override
+    public List<MallOrder> findAllByPage(Integer pageNum, Integer pageSize) {
+        SqlSession sqlSession = MybatisUtil.getSqlSession();
+        MallOrderMapper mapper = sqlSession.getMapper(MallOrderMapper.class);
+        PageHelper.startPage(pageNum,pageSize);
+        List<MallOrder> mallOrderByUserId = mapper.findAllByPage(pageNum,pageSize);
+        MybatisUtil.closeSqlSession();
+        return mallOrderByUserId;
+    }
 }

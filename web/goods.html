@@ -104,7 +104,7 @@
             let content = "";
             for (let i = 0; i < goodsList.length; i++) {
                 content += "<li class='clearfix win'>" +
-                    "<div class='pic'><a title=" + goodsList[i].author +
+                    "<div class='pic'><a href='goodsDetail.html?gid="+goodsList[i].id+"' title=" + goodsList[i].author +
                     "> <img" + " src=" + goodsList[i].image + " width='200' height='200' style='cursor: pointer;'" +
                     " alt=" + goodsList[i].name + "(" + goodsList[i].description + ")" + " title=" + goodsList[i].name + "(" + goodsList[i].description + ")" + "></a></div>" +
                     "<h3 class='title'>" +
@@ -112,9 +112,9 @@
                     "(" + goodsList[i].description + ")" + " title=" + goodsList[i].name + "(" + goodsList[i].description + ")" +
                     ">" + goodsList[i].name + "(" + goodsList[i].description + ")" + "</a> " +
                     "<span>总销量：" + goodsList[i].salenums + "</span></h3>" +
-                    "<div class='handle'><label class='btn_gray_m'><img src='images/front/ucenter/shopping.gif'" +
-                    "width='15' height='15'> <input type = 'button' value = '加入购物车'/> </label>" +
-                    "</div>" +
+                    // "<div class='handle'><label class='btn_gray_m'><img src='images/front/ucenter/shopping.gif'" +
+                    // "width='15' height='15'> <input type = 'button' value = '加入购物车'/> </label>" +
+                    // "</div>" +
                     "<div class='price' style='padding-top:18px'>￥" + goodsList[i].salesprice + "<s>￥" + goodsList[i].marketprice + "</s></div>" +
                     "</li>"
             }

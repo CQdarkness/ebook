@@ -42,4 +42,17 @@ public interface MallOrderDao {
      * @return
      */
     Integer updateMallOrder(MallOrder mallOrder);
+
+    /**
+     * 删除订单
+     * @param orderno
+     * @return
+     */
+    Integer deleteOrderByOrderNo(String orderno);
+
+    /**
+     * 分页查询所有订单
+     * @return
+     */
+    List<MallOrder> findAllByPage(Integer pageNum,Integer pageSize);
 }
